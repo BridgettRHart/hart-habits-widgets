@@ -1,24 +1,24 @@
 <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-.wrap{font-family:"Josefin Sans",sans-serif;display:flex;border-radius:12px;overflow:hidden;max-width:680px;width:100%;min-height:420px}
-.left{background:#056367;padding:28px 24px;width:295px;flex-shrink:0;display:flex;flex-direction:column;align-items:center}
-.eyebrow{color:#ffd2a9;font-size:9px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px}
-.n-title{color:#fdfcfb;font-size:20px;font-weight:500;text-align:center;margin:12px 0 5px}
-.n-sub{color:rgba(253,252,251,.5);font-size:10px;text-align:center;margin-bottom:16px;line-height:1.5}
-.dl-btn{display:inline-block;text-decoration:none;text-align:center;background:#ffd2a9;color:#2a2a2a;border:none;padding:11px 16px;font-family:"Josefin Sans",sans-serif;font-size:11px;font-weight:500;border-radius:3px;cursor:pointer;width:100%;letter-spacing:.04em}
-.right{background:#fdfcfb;padding:28px 22px;flex:1;display:flex;flex-direction:column;gap:10px;justify-content:center}
+.wrap{font-family:"Josefin Sans",sans-serif;display:flex;border-radius:12px;overflow:hidden;width:100%;min-height:420px}
+.left{background:#056367;padding:4% 3%;width:40%;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.eyebrow{color:#ffd2a9;font-size:clamp(8px,1vw,11px);letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px}
+.n-title{color:#fdfcfb;font-size:clamp(18px,2.2vw,28px);font-weight:500;text-align:center;margin:12px 0 5px}
+.n-sub{color:rgba(253,252,251,.5);font-size:clamp(9px,1vw,13px);text-align:center;margin-bottom:16px;line-height:1.5}
+.dl-btn{display:inline-block;text-decoration:none;text-align:center;background:#ffd2a9;color:#2a2a2a;border:none;padding:11px 16px;font-family:"Josefin Sans",sans-serif;font-size:clamp(10px,1vw,13px);font-weight:500;border-radius:3px;cursor:pointer;width:100%;letter-spacing:.04em}
+.right{background:#fdfcfb;padding:4% 3%;flex:1;display:flex;flex-direction:column;gap:10px;justify-content:center}
 .card{border-left:2px solid;padding:10px 0 10px 14px;cursor:pointer;border-radius:0;transition:background .15s}
 .card:hover,.card.active{background:rgba(0,0,0,.03)}
-.card-layer{font-size:9px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px;font-weight:500}
-.card-desc{font-size:12px;color:#2a2a2a;line-height:1.55;margin-bottom:4px}
-.card-habits{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#999}
-.nw{position:relative;width:238px;height:238px}
+.card-layer{font-size:clamp(9px,1vw,12px);text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px;font-weight:500}
+.card-desc{font-size:clamp(12px,1.3vw,16px);color:#2a2a2a;line-height:1.55;margin-bottom:4px}
+.card-habits{font-size:clamp(9px,1vw,12px);letter-spacing:.08em;text-transform:uppercase;color:#999}
+.nw{position:relative;width:min(80%,280px);padding-bottom:min(80%,280px);height:0}
 .nw img{position:absolute;top:0;left:0;width:100%;height:100%;transition:opacity .25s}
 .zl{opacity:0.15}
 .zl.on{opacity:0.9}
 .nl{opacity:1!important;pointer-events:none}
-@media(max-width:580px){.wrap{flex-direction:column;min-height:unset}.left{width:100%;padding:24px 20px}.nw{width:180px;height:180px}.right{padding:20px 16px;gap:8px}}</style>
+@media(max-width:580px){.wrap{flex-direction:column;min-height:unset}.left{width:100%;padding:24px 20px}.nw{width:min(60vw,200px);padding-bottom:min(60vw,200px)}.right{padding:20px 16px;gap:8px}}</style>
 <div class="wrap">
 <div class="left">
 <p class="eyebrow">The Hart Habits Framework</p>
