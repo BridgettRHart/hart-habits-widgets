@@ -86,6 +86,17 @@
 .ha-praksis-heading{font-size:17px;font-weight:500;margin-bottom:8px}
 .ha-praksis-body{font-size:13px;line-height:1.7;color:rgba(253,252,251,.75);margin-bottom:20px}
 .ha-praksis-btn{display:inline-block;background:#ffd2a9;color:#2a2a2a;font-family:"Josefin Sans",sans-serif;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:12px 24px;border-radius:3px;text-decoration:none}
+
+/* Insight + actions */
+.ha-insight-block{background:#f7f5f2;border-radius:8px;padding:24px 28px;margin-bottom:32px;border-left:3px solid #c18c5d}
+.ha-insight-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#c18c5d;margin-bottom:10px}
+.ha-insight-primary{font-size:15px;font-weight:500;color:#2a2a2a;margin-bottom:8px;line-height:1.5}
+.ha-insight-secondary{font-size:13px;color:#666;line-height:1.65}
+.ha-actions{display:flex;align-items:center;gap:20px;margin-bottom:32px;flex-wrap:wrap}
+.ha-print-btn{background:none;border:1px solid #e0dbd3;font-family:"Josefin Sans",sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#666;padding:11px 20px;border-radius:3px;cursor:pointer;transition:all .2s}
+.ha-print-btn:hover{border-color:#c18c5d;color:#c18c5d}
+.ha-share-link{font-family:"Josefin Sans",sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#aaa;text-decoration:underline;text-underline-offset:3px}
+.ha-share-link:hover{color:#666}
 </style>
 
 <div class="ha" id="ha">
@@ -136,6 +147,8 @@
 
     <div class="ha-snapshot" id="haSnapshot"></div>
 
+    <div class="ha-insight-block" id="haInsight"></div>
+
     <div class="ha-email-block">
       <p class="ha-email-heading">Save your results and track your progress over time.</p>
       <p class="ha-email-sub">Enter your email and we'll send you your results, then check in with you in 30, 60, and 90 days to see how things have shifted.</p>
@@ -144,6 +157,11 @@
         <button class="ha-email-btn" id="haEmailBtn">Save My Results</button>
       </div>
       <p class="ha-email-confirm" id="haEmailConfirm">Saved. We'll be in touch.</p>
+    </div>
+
+    <div class="ha-actions">
+      <button class="ha-print-btn" onclick="window.print()">Print / Save as PDF</button>
+      <a href="https://theharthabits.com/assessment" class="ha-share-link">Share this assessment</a>
     </div>
 
     <div class="ha-detail-section">
@@ -239,6 +257,20 @@
       habits.forEach(function(h){ payload.scores[h.name] = scores[h.name]; });
       fetch(WORKER, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) }).catch(function(){});
     }
+
+    // Personalized insight
+    var strongCount = habits.filter(function(h){ return scores[h.name]>=4; }).length;
+    var growingCount = habits.filter(function(h){ return scores[h.name]<=2; }).length;
+    var insightPrimary = strongCount >= 7
+      ? strongCount + ' of 10 Habits are already strong. You have more foundation than you may realize.'
+      : strongCount + ' of 10 Habits are already strong. The others are exactly where the work gets interesting.';
+    var insightSecondary = growingCount > 0
+      ? 'You have ' + growingCount + ' Habit' + (growingCount > 1 ? 's' : '') + ' that want your attention right now. The detail section below tells you more.'
+      : 'Most of your Habits are in the middle or above. Scroll down to read what that means for you.';
+    document.getElementById('haInsight').innerHTML =
+      '<p class="ha-insight-label">Your snapshot</p>' +
+      '<p class="ha-insight-primary">'+insightPrimary+'</p>' +
+      '<p class="ha-insight-secondary">'+insightSecondary+'</p>';
 
     // Build snapshot
     var snap = document.getElementById('haSnapshot');
