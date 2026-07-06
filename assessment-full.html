@@ -1,0 +1,312 @@
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600&family=Vidaloka&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.ha{font-family:"Josefin Sans",sans-serif;width:100%;color:#2a2a2a}
+
+/* INTRO */
+.ha-intro{display:block}
+.ha-intro-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#c18c5d;margin-bottom:16px}
+.ha-intro-heading{font-size:clamp(22px,3vw,32px);font-weight:500;color:#2a2a2a;margin-bottom:16px;line-height:1.3}
+.ha-intro-body{font-size:14px;line-height:1.8;color:#555;margin-bottom:32px;max-width:600px}
+.ha-intro-scale{display:flex;flex-direction:column;gap:8px;margin-bottom:36px}
+.ha-scale-row{display:flex;align-items:center;gap:14px}
+.ha-scale-num{width:28px;height:28px;border-radius:50%;border:1px solid #e0dbd3;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#666;flex-shrink:0}
+.ha-scale-text{font-size:13px;color:#555}
+.ha-start-btn{display:inline-block;background:#056367;color:#fdfcfb;font-family:"Josefin Sans",sans-serif;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:14px 32px;border-radius:3px;border:none;cursor:pointer;transition:background .2s}
+.ha-start-btn:hover{background:#044f52}
+
+/* QUESTION */
+.ha-question{display:none}
+.ha-q-progress{display:flex;gap:4px;margin-bottom:28px}
+.ha-q-pip{height:3px;flex:1;background:#e0dbd3;border-radius:2px;transition:background .3s}
+.ha-q-pip.done{background:#056367}
+.ha-q-pip.active{background:#c18c5d}
+.ha-q-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ha-q-habit{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#c18c5d;font-weight:500}
+.ha-q-count{font-size:9px;color:#aaa;letter-spacing:.05em}
+.ha-q-layer{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#aaa;margin-bottom:20px}
+.ha-declaration{background:#f7f5f2;border-radius:6px;padding:24px 28px;font-family:"Vidaloka",serif;font-size:16px;line-height:1.75;color:#2a2a2a;margin-bottom:28px;border-left:3px solid #c18c5d}
+.ha-scale-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#aaa;margin-bottom:12px}
+.ha-options{display:flex;flex-direction:column;gap:8px;margin-bottom:32px}
+.ha-option{display:flex;align-items:center;gap:14px;background:#fdfcfb;border:1px solid #e0dbd3;border-radius:6px;padding:14px 18px;cursor:pointer;transition:all .2s}
+.ha-option:hover{border-color:#c18c5d;background:#faf7f4}
+.ha-option.selected{background:rgba(5,99,103,.06);border-color:#056367}
+.ha-opt-num{width:28px;height:28px;border-radius:50%;border:1px solid #e0dbd3;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:#666;flex-shrink:0;transition:all .2s}
+.ha-option.selected .ha-opt-num{background:#ffd2a9;border-color:#ffd2a9;color:#2a2a2a}
+.ha-opt-text{font-size:13px;color:#444}
+.ha-q-nav{display:flex;justify-content:space-between;align-items:center}
+.ha-back-btn{background:none;border:none;font-family:"Josefin Sans",sans-serif;font-size:11px;color:#aaa;cursor:pointer;letter-spacing:.05em}
+.ha-back-btn:hover{color:#666}
+.ha-next-btn{background:#056367;color:#fdfcfb;font-family:"Josefin Sans",sans-serif;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:12px 28px;border-radius:3px;border:none;cursor:pointer;transition:background .2s;opacity:.4;pointer-events:none}
+.ha-next-btn.active{opacity:1;pointer-events:all}
+.ha-next-btn:hover{background:#044f52}
+
+/* RESULTS */
+.ha-results{display:none}
+.ha-results-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#c18c5d;margin-bottom:16px}
+.ha-results-heading{font-size:clamp(20px,2.5vw,28px);font-weight:500;color:#2a2a2a;margin-bottom:8px}
+.ha-results-sub{font-size:13px;color:#777;margin-bottom:36px}
+
+/* Snapshot bars */
+.ha-snapshot{margin-bottom:48px}
+.ha-snap-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.ha-snap-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:#666;width:90px;flex-shrink:0;text-align:right}
+.ha-snap-bar{flex:1;position:relative;height:4px;background:linear-gradient(to right,#c0392b,#e67e22,#f1c40f,#2ecc71,#056367);border-radius:2px}
+.ha-snap-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:#ffd2a9;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.ha-snap-midline{position:absolute;top:-4px;left:50%;width:1px;height:12px;background:rgba(0,0,0,.15)}
+
+/* Detail cards */
+.ha-detail-section{margin-bottom:48px}
+.ha-detail-heading{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#aaa;margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid #e0dbd3}
+.ha-detail-card{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #f0ece8}
+.ha-detail-card:last-child{border-bottom:none}
+.ha-detail-habit{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:600;margin-bottom:6px}
+.ha-detail-poles{display:flex;justify-content:space-between;margin-bottom:8px}
+.ha-detail-pole{font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+.ha-detail-pole.low{color:#c0392b}
+.ha-detail-pole.high{color:#056367}
+.ha-detail-bar{position:relative;height:4px;background:linear-gradient(to right,#c0392b,#e67e22,#f1c40f,#2ecc71,#056367);border-radius:2px;margin-bottom:12px}
+.ha-detail-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:#ffd2a9;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.ha-detail-copy{font-size:13px;line-height:1.75;color:#555}
+
+/* Email capture */
+.ha-email-block{background:#f7f5f2;border-radius:8px;padding:28px 32px;margin-bottom:32px}
+.ha-email-heading{font-size:15px;font-weight:500;color:#2a2a2a;margin-bottom:6px}
+.ha-email-sub{font-size:12px;color:#777;margin-bottom:18px;line-height:1.6}
+.ha-email-row{display:flex;gap:10px;flex-wrap:wrap}
+.ha-email-input{flex:1;min-width:220px;padding:11px 16px;border:1px solid #e0dbd3;border-radius:3px;font-family:"Josefin Sans",sans-serif;font-size:13px;color:#2a2a2a;background:#fff}
+.ha-email-input:focus{outline:none;border-color:#056367}
+.ha-email-btn{background:#056367;color:#fdfcfb;font-family:"Josefin Sans",sans-serif;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:11px 24px;border-radius:3px;border:none;cursor:pointer;white-space:nowrap}
+.ha-email-btn:hover{background:#044f52}
+.ha-email-confirm{display:none;font-size:13px;color:#056367;margin-top:10px}
+
+.ha-praksis-block{background:#056367;border-radius:8px;padding:28px 32px;color:#fdfcfb}
+.ha-praksis-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#ffd2a9;margin-bottom:10px}
+.ha-praksis-heading{font-size:17px;font-weight:500;margin-bottom:8px}
+.ha-praksis-body{font-size:13px;line-height:1.7;color:rgba(253,252,251,.75);margin-bottom:20px}
+.ha-praksis-btn{display:inline-block;background:#ffd2a9;color:#2a2a2a;font-family:"Josefin Sans",sans-serif;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:12px 24px;border-radius:3px;text-decoration:none}
+</style>
+
+<div class="ha" id="ha">
+
+  <!-- INTRO -->
+  <div class="ha-intro" id="haIntro">
+    <p class="ha-intro-eyebrow">The Hart Habits Assessment</p>
+    <h2 class="ha-intro-heading">Ten declarations. Tell us where you are.</h2>
+    <p class="ha-intro-body">This is not a test. There is no score. Just tell us how true each statement feels right now. Your answers belong to you. We'll use them to show you where you already are, and where you might want to go.</p>
+    <div class="ha-intro-scale">
+      <div class="ha-scale-row"><div class="ha-scale-num">1</div><span class="ha-scale-text">Not true at all</span></div>
+      <div class="ha-scale-row"><div class="ha-scale-num">2</div><span class="ha-scale-text">It's possible</span></div>
+      <div class="ha-scale-row"><div class="ha-scale-num">3</div><span class="ha-scale-text">I'm working on believing that</span></div>
+      <div class="ha-scale-row"><div class="ha-scale-num">4</div><span class="ha-scale-text">It's almost true</span></div>
+      <div class="ha-scale-row"><div class="ha-scale-num">5</div><span class="ha-scale-text">Yes, that is true</span></div>
+    </div>
+    <button class="ha-start-btn" id="haStartBtn">Begin the Assessment</button>
+  </div>
+
+  <!-- QUESTION -->
+  <div class="ha-question" id="haQuestion">
+    <div class="ha-q-progress" id="haProgress"></div>
+    <div class="ha-q-meta">
+      <span class="ha-q-habit" id="haQHabit"></span>
+      <span class="ha-q-count" id="haQCount"></span>
+    </div>
+    <p class="ha-q-layer" id="haQLayer"></p>
+    <div class="ha-declaration" id="haDeclaration"></div>
+    <p class="ha-scale-label">How true does this feel right now?</p>
+    <div class="ha-options" id="haOptions">
+      <div class="ha-option" data-value="1"><div class="ha-opt-num">1</div><span class="ha-opt-text">Not true at all</span></div>
+      <div class="ha-option" data-value="2"><div class="ha-opt-num">2</div><span class="ha-opt-text">It's possible</span></div>
+      <div class="ha-option" data-value="3"><div class="ha-opt-num">3</div><span class="ha-opt-text">I'm working on believing that</span></div>
+      <div class="ha-option" data-value="4"><div class="ha-opt-num">4</div><span class="ha-opt-text">It's almost true</span></div>
+      <div class="ha-option" data-value="5"><div class="ha-opt-num">5</div><span class="ha-opt-text">Yes, that is true</span></div>
+    </div>
+    <div class="ha-q-nav">
+      <button class="ha-back-btn" id="haBackBtn">Back</button>
+      <button class="ha-next-btn" id="haNextBtn">Next</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="ha-results" id="haResults">
+    <p class="ha-results-eyebrow">Your Results</p>
+    <h2 class="ha-results-heading">Here is where you are right now.</h2>
+    <p class="ha-results-sub">The marker shows where you placed yourself on each Habit. The center line is the midpoint.</p>
+
+    <div class="ha-snapshot" id="haSnapshot"></div>
+
+    <div class="ha-email-block">
+      <p class="ha-email-heading">Save your results and track your progress over time.</p>
+      <p class="ha-email-sub">Enter your email and we'll send you your results, then check in with you in 30, 60, and 90 days to see how things have shifted.</p>
+      <div class="ha-email-row">
+        <input type="email" class="ha-email-input" id="haEmailInput" placeholder="your@email.com">
+        <button class="ha-email-btn" id="haEmailBtn">Save My Results</button>
+      </div>
+      <p class="ha-email-confirm" id="haEmailConfirm">Saved. We'll be in touch.</p>
+    </div>
+
+    <div class="ha-detail-section">
+      <p class="ha-detail-heading">Your habits, in detail</p>
+      <div id="haDetailCards"></div>
+    </div>
+
+    <div class="ha-praksis-block">
+      <p class="ha-praksis-eyebrow">Ready to go deeper?</p>
+      <p class="ha-praksis-heading">Praksis is where the work happens.</p>
+      <p class="ha-praksis-body">The assessment shows you where you are. Praksis is the daily practice that moves you. It meets you where you are and walks with you through the Habits that need the most attention right now.</p>
+      <a href="https://theharthabits.com/praksis" class="ha-praksis-btn">Learn About Praksis</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var WORKER = 'https://hart-habits-assessment.bridgettrhart.workers.dev/submit';
+
+  var habits = [
+    { name:'SELF', layer:'Foundation Layer', declaration:'I am an exquisite and unique being. Everything flows through me and I know, love, and respect the vessel I live in.', low:'Jealous / Insecure', high:'Confident / Self-Aware', copy:{ low:'It feels like fate has helped everyone else and left you out, and you cannot quite figure out why.', mid:'You look capable from the outside, but inside you feel like you have been handling everyone else\'s needs at the expense of your own.', high:'You feel worthy. Not because you\'re perfect, but because you\'ve made peace with the complexity of who you actually are.' }},
+    { name:'TRUTH', layer:'Foundation Layer', declaration:'I face objective and subjective truths head on and carry them simultaneously, even when they conflict.', low:'Judgemental', high:'Open Minded', copy:{ low:'The world feels safer when you stay close to people who see things the way you do and keep your distance from everyone else.', mid:'You\'re not closed off, but you keep interactions brief because you\'re not sure accepting someone\'s perspective means endorsing their choices.', high:'You\'ve learned to hold your own truth and someone else\'s conflicting truth at the same time, and you understand that\'s exactly what sets you free.' }},
+    { name:'TRUST', layer:'Operating Layer', declaration:'I choose to trust as a default because I listen to my inner voice and I know how to see and carry truth.', low:'Guarded', high:'Trustworthy', copy:{ low:'You have to stay vigilant, because the moment you let your guard down or share too much, someone will use it against you.', mid:'You\'re generous and well-meaning, but you keep finding yourself drained by people you were just trying to help.', high:'When you invest in others freely, doors open, and you\'ve seen enough of that to know that trust is worth the risk.' }},
+    { name:'THOUGHTS', layer:'Operating Layer', declaration:'I allow and direct my thoughts to focus on those things that I want to attract more of.', low:'Victimized', high:'Courageous', copy:{ low:'You have to keep track of every wrong done to you, because if you let it go, it will just happen again.', mid:'You notice when you\'re replaying things that already happened, and you\'re starting to catch yourself and redirect.', high:'Because you\'re not carrying old grievances, you can walk into each situation fresh and see it clearly.' }},
+    { name:'TALK', layer:'Operating Layer', declaration:'I use my words to exponentially strengthen and uplift myself and others.', low:'Gossip', high:'Wise', copy:{ low:'You\'re somehow always in the middle of everyone\'s drama, and you genuinely can\'t figure out how you keep ending up there.', mid:'Other people\'s problems have a way of making your own feel a little more manageable.', high:'You feel genuinely connected to the people around you, and their pain matters to you the way your own does.' }},
+    { name:'NON-VERBALS', layer:'Operating Layer', declaration:'I keep my cool physically when faced with a tough situation. It gives me time to process before I respond.', low:'Volatile', high:'Calm, Cool, Collected', copy:{ low:'Your reactions are strong because the situations that trigger them are genuinely out of line, and people need to know that.', mid:'You\'re comfortable with your feelings and okay if the world sees them, though sometimes they move through you stronger than you expect.', high:'You take the time to listen and process before you respond, and people trust you with their biggest things because nothing rattles you.' }},
+    { name:'SHOW', layer:'Evidence Layer', declaration:'I give my inner world a form I can see, hear, touch, and show when it\'s time.', low:'Insecure (perceived as conceited)', high:'Humble', copy:{ low:'You make sure people know what you\'ve accomplished, even when the credit isn\'t entirely yours to take.', mid:'You\'re proud of what you\'ve built, but underneath it you\'re still not sure it\'s enough, and you\'re not quite ready to let people see both sides of that.', high:'Everything you\'ve built feels like a blessing, and that gratitude is what keeps you generous with it.' }},
+    { name:'PROTECT', layer:'Evidence Layer', declaration:'I protect myself and others from my feelings and judgements and I protect my secrets and theirs from the rest of the world.', low:'Manipulative', high:'Unshakeable / Fortitude', copy:{ low:'You don\'t mean to hurt anyone, but if sharing what you know helps you move forward, it\'s hard to see why that\'s a problem.', mid:'You try to stay positive, but you\'re more caught up in what\'s going on around you than you\'d like to admit, and the things you know, you share.', high:'You carry what people give you quietly and without complaint, because you know you have the strength to hold it.' }},
+    { name:'ENDURE', layer:'Long Game Layer', declaration:'I consistently implement realistic small steps towards my vision.', low:'Isolated / Afraid', high:'Powerful / Inspired', copy:{ low:'Confrontation costs too much, and walking away feels a lot safer than trying to face something head on.', mid:'Life feels largely out of your control, so you focus on making it through each day as best you can.', high:'Adversity doesn\'t stop you. It teaches you, and you come out of hard seasons more certain of what you\'re capable of.' }},
+    { name:'HOPE', layer:'Long Game Layer', declaration:'I maintain or find hope, even when it is not easy.', low:'Resigned / Pessimistic', high:'Optimistically Expectant', copy:{ low:'You expect things to go wrong, and at this point you\'re almost used to it, which is its own kind of exhaustion.', mid:'You\'re doing your best to do the right things, but it\'s hard not to wonder why it seems to work out for everyone else and not for you.', high:'You have no doubt that the best outcomes are coming. It\'s just a matter of timing and finding the right people to do the work with.' }}
+  ];
+
+  var scores = {};
+  var current = 0;
+  var sessionId = (function(){
+    var k='hhSessionId', id=localStorage.getItem(k);
+    if(!id){id='hh_'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem(k,id);}
+    return id;
+  })();
+  var submitted = false;
+
+  function getCopy(h, score) {
+    if(score <= 2) return h.copy.low;
+    if(score === 3) return h.copy.mid;
+    return h.copy.high;
+  }
+
+  function markerPos(score) {
+    return { 1:'5%', 2:'25%', 3:'50%', 4:'75%', 5:'95%' }[score];
+  }
+
+  function buildProgress() {
+    var el = document.getElementById('haProgress');
+    el.innerHTML = '';
+    habits.forEach(function(h, i) {
+      var pip = document.createElement('div');
+      pip.className = 'ha-q-pip' + (i < current ? ' done' : i === current ? ' active' : '');
+      el.appendChild(pip);
+    });
+  }
+
+  function showQuestion(idx) {
+    current = idx;
+    var h = habits[idx];
+    document.getElementById('haQHabit').textContent = h.name;
+    document.getElementById('haQCount').textContent = (idx+1) + ' of ' + habits.length;
+    document.getElementById('haQLayer').textContent = h.layer;
+    document.getElementById('haDeclaration').textContent = '"' + h.declaration + '"';
+    buildProgress();
+
+    document.querySelectorAll('.ha-option').forEach(function(opt){
+      opt.classList.remove('selected');
+      if(scores[h.name] && parseInt(opt.dataset.value) === scores[h.name]) opt.classList.add('selected');
+    });
+
+    var nextBtn = document.getElementById('haNextBtn');
+    nextBtn.classList.toggle('active', !!scores[h.name]);
+    nextBtn.textContent = idx === habits.length - 1 ? 'See My Results' : 'Next';
+
+    document.getElementById('haBackBtn').style.visibility = idx === 0 ? 'hidden' : 'visible';
+  }
+
+  function showResults() {
+    document.getElementById('haQuestion').style.display = 'none';
+    document.getElementById('haResults').style.display = 'block';
+
+    // Submit to Airtable
+    if(!submitted) {
+      submitted = true;
+      var payload = { sessionId: sessionId, completionType: 'full', sourcePage: '/assessment', scores: {} };
+      habits.forEach(function(h){ payload.scores[h.name] = scores[h.name]; });
+      fetch(WORKER, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) }).catch(function(){});
+    }
+
+    // Build snapshot
+    var snap = document.getElementById('haSnapshot');
+    snap.innerHTML = '';
+    habits.forEach(function(h) {
+      var row = document.createElement('div');
+      row.className = 'ha-snap-row';
+      row.innerHTML = '<span class="ha-snap-label">' + h.name + '</span><div class="ha-snap-bar"><div class="ha-snap-midline"></div><div class="ha-snap-marker" style="left:' + markerPos(scores[h.name]) + '"></div></div>';
+      snap.appendChild(row);
+    });
+
+    // Build detail cards — sorted low to high
+    var sorted = habits.slice().sort(function(a,b){ return scores[a.name] - scores[b.name]; });
+    var cards = document.getElementById('haDetailCards');
+    cards.innerHTML = '';
+    sorted.forEach(function(h) {
+      var score = scores[h.name];
+      var card = document.createElement('div');
+      card.className = 'ha-detail-card';
+      card.innerHTML = '<p class="ha-detail-habit">' + h.name + '</p>' +
+        '<div class="ha-detail-poles"><span class="ha-detail-pole low">' + h.low + '</span><span class="ha-detail-pole high">' + h.high + '</span></div>' +
+        '<div class="ha-detail-bar"><div class="ha-detail-marker" style="left:' + markerPos(score) + '"></div></div>' +
+        '<p class="ha-detail-copy">' + getCopy(h, score) + '</p>';
+      cards.appendChild(card);
+    });
+  }
+
+  // Start button
+  document.getElementById('haStartBtn').addEventListener('click', function(){
+    document.getElementById('haIntro').style.display = 'none';
+    document.getElementById('haQuestion').style.display = 'block';
+    showQuestion(0);
+  });
+
+  // Option selection
+  document.querySelectorAll('.ha-option').forEach(function(opt){
+    opt.addEventListener('click', function(){
+      scores[habits[current].name] = parseInt(opt.dataset.value);
+      document.querySelectorAll('.ha-option').forEach(function(o){ o.classList.remove('selected'); });
+      opt.classList.add('selected');
+      document.getElementById('haNextBtn').classList.add('active');
+    });
+  });
+
+  // Next button
+  document.getElementById('haNextBtn').addEventListener('click', function(){
+    if(!scores[habits[current].name]) return;
+    if(current === habits.length - 1) {
+      showResults();
+    } else {
+      showQuestion(current + 1);
+    }
+  });
+
+  // Back button
+  document.getElementById('haBackBtn').addEventListener('click', function(){
+    if(current > 0) showQuestion(current - 1);
+  });
+
+  // Email save
+  document.getElementById('haEmailBtn').addEventListener('click', function(){
+    var email = document.getElementById('haEmailInput').value.trim();
+    if(!email || !email.includes('@')) return;
+    var payload = { sessionId: sessionId, email: email, completionType: 'full', sourcePage: '/assessment', scores: {} };
+    habits.forEach(function(h){ payload.scores[h.name] = scores[h.name]; });
+    fetch(WORKER, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) })
+      .then(function(){ document.getElementById('haEmailConfirm').style.display = 'block'; })
+      .catch(function(){});
+  });
+
+})();
+</script>
