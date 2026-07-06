@@ -67,6 +67,7 @@
 .ha-detail-pole.high{color:#056367}
 .ha-detail-bar{position:relative;height:4px;background:linear-gradient(to right,#c0392b,#e67e22,#f1c40f,#2ecc71,#056367);border-radius:2px;margin-bottom:12px}
 .ha-detail-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:#ffd2a9;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.ha-detail-response{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#c18c5d;font-weight:500;margin-bottom:6px}
 .ha-detail-copy{font-size:13px;line-height:1.75;color:#555}
 
 /* Email capture */
@@ -257,9 +258,9 @@
       var score = scores[h.name];
       var card = document.createElement('div');
       card.className = 'ha-detail-card';
+      var scaleLabels = {1:'Not true at all',2:'It\'s possible',3:'I\'m working on believing that',4:'It\'s almost true',5:'Yes, that is true'};
       card.innerHTML = '<p class="ha-detail-habit">' + h.name + '</p>' +
-        '<div class="ha-detail-poles"><span class="ha-detail-pole low">' + h.low + '</span><span class="ha-detail-pole high">' + h.high + '</span></div>' +
-        '<div class="ha-detail-bar"><div class="ha-detail-marker" style="left:' + markerPos(score) + '"></div></div>' +
+        '<p class="ha-detail-response">' + scaleLabels[score] + '</p>' +
         '<p class="ha-detail-copy">' + getCopy(h, score) + '</p>';
       cards.appendChild(card);
     });
