@@ -52,13 +52,13 @@
 .ha-snap-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .ha-snap-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:#666;width:90px;flex-shrink:0;text-align:right}
 .ha-snap-bar{flex:1;position:relative;height:4px;background:linear-gradient(to right,#c0392b,#e67e22,#f1c40f,#2ecc71,#056367);border-radius:2px}
-.ha-snap-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;background:#ffd2a9;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.ha-snap-marker{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:16px;line-height:1;color:#c18c5d;text-shadow:0 1px 2px rgba(0,0,0,.2);margin-top:-1px}
 .ha-snap-midline{position:absolute;top:-4px;left:50%;width:1px;height:12px;background:rgba(0,0,0,.15)}
 
 /* Detail cards */
 .ha-detail-section{margin-bottom:48px}
 .ha-detail-heading{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#aaa;margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid #e0dbd3}
-.ha-detail-card{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #f0ece8}
+.ha-detail-card{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #f0ece8}
 .ha-detail-card:last-child{border-bottom:none}
 .ha-detail-habit{font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:600;margin-bottom:6px}
 .ha-detail-poles{display:flex;justify-content:space-between;margin-bottom:8px}
@@ -246,7 +246,7 @@
     habits.forEach(function(h) {
       var row = document.createElement('div');
       row.className = 'ha-snap-row';
-      row.innerHTML = '<span class="ha-snap-label">' + h.name + '</span><div class="ha-snap-bar"><div class="ha-snap-midline"></div><div class="ha-snap-marker" style="left:' + markerPos(scores[h.name]) + '"></div></div>';
+      row.innerHTML = '<span class="ha-snap-label">' + h.name + '</span><div class="ha-snap-bar"><div class="ha-snap-midline"></div><span class="ha-snap-marker" style="left:' + markerPos(scores[h.name]) + '">&#9829;</span></div>';
       snap.appendChild(row);
     });
 
