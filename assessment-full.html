@@ -299,13 +299,20 @@
     showQuestion(0);
   });
 
-  // Option selection
+  // Option selection — auto-advance after brief pause
   document.querySelectorAll('.ha-option').forEach(function(opt){
     opt.addEventListener('click', function(){
       scores[habits[current].name] = parseInt(opt.dataset.value);
       document.querySelectorAll('.ha-option').forEach(function(o){ o.classList.remove('selected'); });
       opt.classList.add('selected');
       document.getElementById('haNextBtn').classList.add('active');
+      setTimeout(function(){
+        if(current === habits.length - 1) {
+          showResults();
+        } else {
+          showQuestion(current + 1);
+        }
+      }, 350);
     });
   });
 
