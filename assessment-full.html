@@ -52,22 +52,17 @@
 .ha-snap-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .ha-snap-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:500;color:#444;width:100px;flex-shrink:0;text-align:right}
 .ha-snap-bar{flex:1;position:relative;height:5px;background:linear-gradient(to right,#c0392b,#e67e22,#f1c40f,#2ecc71,#056367);border-radius:2px}
-.ha-snap-marker{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:20px;line-height:1;color:#c18c5d;filter:drop-shadow(0 1px 2px rgba(0,0,0,.25))}
+.ha-snap-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;background:#c18c5d;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .ha-snap-midline{position:absolute;top:-5px;left:50%;width:1px;height:15px;background:rgba(0,0,0,.2)}
 
-/* Detail cards */
+/* Detail paragraph */
 .ha-detail-section{margin-bottom:48px}
-.ha-detail-heading{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#888;margin-bottom:24px;padding-bottom:10px;border-bottom:1px solid #e0dbd3}
-.ha-detail-card{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid #ede9e4}
-.ha-detail-card:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.ha-detail-declaration{font-family:"Vidaloka",serif;font-size:15px;line-height:1.7;color:#2a2a2a;margin-bottom:8px;font-style:italic}
-.ha-detail-response{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#c18c5d;font-weight:500;margin-bottom:8px}
-.ha-detail-copy{font-size:15px;line-height:1.75;color:#444}
+.ha-detail-para{font-size:16px;line-height:2;color:#444}
 
-/* Email capture */
-.ha-email-block{background:#f7f5f2;border-radius:8px;padding:28px 32px;margin-bottom:32px}
-.ha-email-heading{font-size:17px;font-weight:500;color:#2a2a2a;margin-bottom:6px}
-.ha-email-sub{font-size:14px;color:#555;margin-bottom:18px;line-height:1.6}
+/* Resonate email */
+.ha-resonate-block{margin-bottom:40px}
+.ha-resonate-prompt{font-size:17px;font-weight:500;color:#2a2a2a;margin-bottom:6px}
+.ha-resonate-sub{font-size:14px;color:#555;margin-bottom:18px;line-height:1.6}
 .ha-email-row{display:flex;gap:10px;flex-wrap:wrap}
 .ha-email-input{flex:1;min-width:220px;padding:12px 16px;border:1px solid #e0dbd3;border-radius:3px;font-family:"Josefin Sans",sans-serif;font-size:15px;color:#2a2a2a;background:#fff}
 .ha-email-input:focus{outline:none;border-color:#056367}
@@ -143,12 +138,16 @@
 
     <div class="ha-insight-block" id="haInsight"></div>
 
-    <div class="ha-email-block">
-      <p class="ha-email-heading">Save your results and track your progress over time.</p>
-      <p class="ha-email-sub">Enter your email and we'll send you your results, then check in with you in 30, 60, and 90 days to see how things have shifted.</p>
+    <div class="ha-detail-section">
+      <p class="ha-detail-para" id="haDetailPara"></p>
+    </div>
+
+    <div class="ha-resonate-block">
+      <p class="ha-resonate-prompt">Does this resonate?</p>
+      <p class="ha-resonate-sub">Leave your email and we'll send you your results, then check in with you in 30, 60, and 90 days to see how things have shifted.</p>
       <div class="ha-email-row">
         <input type="email" class="ha-email-input" id="haEmailInput" placeholder="your@email.com">
-        <button class="ha-email-btn" id="haEmailBtn">Save My Results</button>
+        <button class="ha-email-btn" id="haEmailBtn">Yes, Save My Results</button>
       </div>
       <p class="ha-email-confirm" id="haEmailConfirm">Saved. We'll be in touch.</p>
     </div>
@@ -156,11 +155,6 @@
     <div class="ha-actions">
       <button class="ha-print-btn" onclick="window.print()">Print / Save as PDF</button>
       <a href="https://theharthabits.com/assessment" class="ha-share-link">Share this assessment</a>
-    </div>
-
-    <div class="ha-detail-section">
-      <p class="ha-detail-heading">Your habits, in detail</p>
-      <div id="haDetailCards"></div>
     </div>
 
     <div class="ha-praksis-block">
@@ -272,24 +266,14 @@
     habits.forEach(function(h) {
       var row = document.createElement('div');
       row.className = 'ha-snap-row';
-      row.innerHTML = '<span class="ha-snap-label">' + h.name + '</span><div class="ha-snap-bar"><div class="ha-snap-midline"></div><span class="ha-snap-marker" style="left:' + markerPos(scores[h.name]) + '">&#9829;</span></div>';
+      row.innerHTML = '<span class="ha-snap-label">' + h.name + '</span><div class="ha-snap-bar"><div class="ha-snap-midline"></div><div class="ha-snap-marker" style="left:' + markerPos(scores[h.name]) + '"></div></div>';
       snap.appendChild(row);
     });
 
-    // Build detail cards — sorted low to high
+    // Build single detail paragraph — sorted low to high
     var sorted = habits.slice().sort(function(a,b){ return scores[a.name] - scores[b.name]; });
-    var cards = document.getElementById('haDetailCards');
-    cards.innerHTML = '';
-    sorted.forEach(function(h) {
-      var score = scores[h.name];
-      var card = document.createElement('div');
-      card.className = 'ha-detail-card';
-      var scaleLabels = {1:'Not true at all',2:'It\'s possible',3:'I\'m working on believing that',4:'It\'s almost true',5:'Yes, that is true'};
-      card.innerHTML = '<p class="ha-detail-declaration">"' + h.declaration + '"</p>' +
-        '<p class="ha-detail-response">' + scaleLabels[score] + '</p>' +
-        '<p class="ha-detail-copy">' + getCopy(h, score) + '</p>';
-      cards.appendChild(card);
-    });
+    var sentences = sorted.map(function(h){ return getCopy(h, scores[h.name]); });
+    document.getElementById('haDetailPara').textContent = sentences.join(' ');
   }
 
   // Start button
