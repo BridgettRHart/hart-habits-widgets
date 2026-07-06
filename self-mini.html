@@ -1,0 +1,117 @@
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.mini-wrap{font-family:"Josefin Sans",sans-serif;width:100%;color:#fdfcfb}
+.mini-eyebrow{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#ffd2a9;margin-bottom:20px}
+.mini-declaration{background:rgba(253,252,251,.08);border:1px solid rgba(253,252,251,.15);border-radius:6px;padding:24px 28px;font-style:italic;font-size:15px;line-height:1.7;color:#fdfcfb;margin-bottom:28px}
+.mini-scale-label{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(253,252,251,.5);margin-bottom:12px}
+.mini-options{display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
+.mini-option{display:flex;align-items:center;gap:14px;background:rgba(253,252,251,.06);border:1px solid rgba(253,252,251,.12);border-radius:6px;padding:14px 18px;cursor:pointer;transition:all .2s}
+.mini-option:hover{background:rgba(253,252,251,.12);border-color:rgba(253,252,251,.25)}
+.mini-option.selected{background:rgba(193,140,93,.2);border-color:#c18c5d}
+.mini-num{width:28px;height:28px;border-radius:50%;border:1px solid rgba(253,252,251,.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;transition:all .2s}
+.mini-option.selected .mini-num{background:#ffd2a9;border-color:#ffd2a9;color:#2a2a2a}
+.mini-text{font-size:13px;color:rgba(253,252,251,.85)}
+.mini-result{display:none;margin-bottom:28px}
+.mini-result.visible{display:block}
+.mini-spectrum-bar{position:relative;height:4px;background:linear-gradient(to right,#c0392b,#e67e22,#f1c40f,#2ecc71,#056367);border-radius:2px;margin:20px 0 8px}
+.mini-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;background:#ffd2a9;border-radius:50%;border:2px solid #fdfcfb;transition:left .4s ease}
+.mini-poles{display:flex;justify-content:space-between;margin-bottom:20px}
+.mini-pole{font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+.mini-pole.low{color:#e07070}
+.mini-pole.high{color:#7ecfb0}
+.mini-result-copy{font-size:15px;line-height:1.75;color:rgba(253,252,251,.9);margin-bottom:24px;padding:18px 22px;background:rgba(253,252,251,.06);border-radius:6px;border-left:2px solid #c18c5d}
+.mini-cta{display:inline-block;text-decoration:none;background:#056367;color:#fdfcfb;font-family:"Josefin Sans",sans-serif;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;padding:13px 24px;border-radius:3px;transition:background .2s}
+.mini-cta:hover{background:#044f52}
+.mini-save{background:none;border:none;color:rgba(253,252,251,.45);font-family:"Josefin Sans",sans-serif;font-size:11px;cursor:pointer;margin-left:20px;text-decoration:underline;text-underline-offset:3px}
+</style>
+
+<div class="mini-wrap">
+  <div class="mini-declaration">"I am an exquisite and unique being. Everything flows through me and I know, love, and respect the vessel I live in."</div>
+  <p class="mini-scale-label">How true does this feel right now?</p>
+  <div class="mini-options" id="miniOptions">
+    <div class="mini-option" data-value="1"><div class="mini-num">1</div><span class="mini-text">Not true at all</span></div>
+    <div class="mini-option" data-value="2"><div class="mini-num">2</div><span class="mini-text">It's possible</span></div>
+    <div class="mini-option" data-value="3"><div class="mini-num">3</div><span class="mini-text">I'm working on believing that</span></div>
+    <div class="mini-option" data-value="4"><div class="mini-num">4</div><span class="mini-text">It's almost true</span></div>
+    <div class="mini-option" data-value="5"><div class="mini-num">5</div><span class="mini-text">Yes, that is true</span></div>
+  </div>
+
+  <div class="mini-result" id="miniResult">
+    <div class="mini-spectrum-bar"><div class="mini-marker" id="miniMarker"></div></div>
+    <div class="mini-poles"><span class="mini-pole low">Jealous / Insecure</span><span class="mini-pole high">Confident / Self-Aware</span></div>
+    <div class="mini-result-copy" id="miniCopy"></div>
+    <a href="https://theharthabits.com/assessment" class="mini-cta">See how you score across all 10 Habits →</a>
+    <button class="mini-save" id="miniSave">Save my result</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var WORKER = 'https://hart-habits-assessment.bridgettrhart.workers.dev/submit';
+  var copy = {
+    1: "It feels like fate has helped everyone else and left you out, and you can't quite figure out why.",
+    2: "It feels like fate has helped everyone else and left you out, and you can't quite figure out why.",
+    3: "You look capable from the outside, but inside you feel like you've been handling everyone else's needs at the expense of your own.",
+    4: "You feel worthy. Not because you're perfect, but because you've made peace with the complexity of who you actually are.",
+    5: "You feel worthy. Not because you're perfect, but because you've made peace with the complexity of who you actually are."
+  };
+  var markerPos = { 1: '5%', 2: '25%', 3: '50%', 4: '75%', 5: '95%' };
+
+  function getSessionId() {
+    var key = 'hhSessionId';
+    var id = localStorage.getItem(key);
+    if (!id) { id = 'hh_' + Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem(key, id); }
+    return id;
+  }
+
+  var selected = null;
+
+  document.querySelectorAll('.mini-option').forEach(function(opt) {
+    opt.addEventListener('click', function() {
+      selected = parseInt(opt.dataset.value);
+      document.querySelectorAll('.mini-option').forEach(function(o){ o.classList.remove('selected'); });
+      opt.classList.add('selected');
+      document.getElementById('miniCopy').textContent = copy[selected];
+      document.getElementById('miniMarker').style.left = markerPos[selected];
+      var result = document.getElementById('miniResult');
+      result.classList.add('visible');
+
+      // No save on click — only saves on deliberate action (CTA or Save button)
+    });
+  });
+
+  // Save on CTA click (no email)
+  document.querySelector('.mini-cta').addEventListener('click', function() {
+    if (!selected) return;
+    fetch(WORKER, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: getSessionId(),
+        completionType: 'mini',
+        sourcePage: '/self',
+        scores: { 'SELF': selected }
+      })
+    }).catch(function(){});
+  });
+
+  // Save on Save button click (with email)
+  document.getElementById('miniSave').addEventListener('click', function() {
+    if (!selected) return;
+    var email = prompt('Enter your email to save your result and track your progress over time:');
+    if (!email) return;
+    fetch(WORKER, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: getSessionId(),
+        email: email,
+        completionType: 'mini',
+        sourcePage: '/self',
+        scores: { 'SELF': selected }
+      })
+    }).then(function(){ alert('Saved. We\'ll check in with you in 30 days.'); }).catch(function(){});
+  });
+})();
+</script>
