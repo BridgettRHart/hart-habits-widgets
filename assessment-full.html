@@ -303,20 +303,6 @@
       fetch(WORKER, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) }).catch(function(){});
     }
 
-    // Personalized insight
-    var strongCount = habits.filter(function(h){ return scores[h.name]>=4; }).length;
-    var growingCount = habits.filter(function(h){ return scores[h.name]<=2; }).length;
-    var insightPrimary = strongCount >= 7
-      ? strongCount + ' of 10 Habits are already strong. You have more foundation than you may realize.'
-      : strongCount + ' of 10 Habits are already strong. The others are exactly where the work gets interesting.';
-    var insightSecondary = growingCount > 0
-      ? 'You have ' + growingCount + ' Habit' + (growingCount > 1 ? 's' : '') + ' that want your attention right now. The detail section below tells you more.'
-      : 'Most of your Habits are in the middle or above. Scroll down to read what that means for you.';
-    document.getElementById('haInsight').innerHTML =
-      '<p class="ha-insight-label">Your snapshot</p>' +
-      '<p class="ha-insight-primary">'+insightPrimary+'</p>' +
-      '<p class="ha-insight-secondary">'+insightSecondary+'</p>';
-
     // Build snapshot
     var snap = document.getElementById('haSnapshot');
     snap.innerHTML = '';
