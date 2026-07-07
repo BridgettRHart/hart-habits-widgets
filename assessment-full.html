@@ -55,9 +55,28 @@
 .ha-snap-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;background:#c18c5d;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .ha-snap-midline{position:absolute;top:-5px;left:50%;width:1px;height:15px;background:rgba(0,0,0,.2)}
 
-/* Detail paragraph */
-.ha-detail-section{margin-bottom:48px}
-.ha-detail-para{font-size:16px;line-height:2;color:#444}
+/* Layer sections */
+.ha-detail-layers{margin-bottom:48px}
+.ha-layer{border-radius:8px;padding:24px 28px;margin-bottom:20px;border-left:4px solid}
+.ha-layer-foundation{background:rgba(255,210,169,.1);border-color:#ffd2a9}
+.ha-layer-operating{background:rgba(5,99,103,.06);border-color:#056367}
+.ha-layer-evidence{background:rgba(107,87,107,.08);border-color:#6b576b}
+.ha-layer-long-game{background:rgba(193,140,93,.1);border-color:#c18c5d}
+.ha-layer-eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;margin-bottom:10px}
+.ha-layer-foundation .ha-layer-eyebrow{color:#c18c5d}
+.ha-layer-operating .ha-layer-eyebrow{color:#056367}
+.ha-layer-evidence .ha-layer-eyebrow{color:#6b576b}
+.ha-layer-long-game .ha-layer-eyebrow{color:#c18c5d}
+.ha-layer-opener{font-size:15px;font-weight:500;color:#2a2a2a;margin-bottom:12px;line-height:1.6}
+.ha-layer-copy{font-size:16px;line-height:1.9;color:#444;margin-bottom:12px}
+.ha-layer-closer{font-size:14px;font-style:italic;color:#666;line-height:1.6}
+
+/* Print footer */
+.ha-print-footer{display:none;text-align:center;font-size:12px;color:#aaa;margin-top:40px;padding-top:20px;border-top:1px solid #e0dbd3}
+@media print{
+  .ha-print-footer{display:block}
+  .ha-actions,.ha-resonate-block{display:none}
+}
 
 /* Resonate email */
 .ha-resonate-block{margin-bottom:40px}
@@ -138,9 +157,7 @@
 
     <div class="ha-insight-block" id="haInsight"></div>
 
-    <div class="ha-detail-section">
-      <p class="ha-detail-para" id="haDetailPara"></p>
-    </div>
+    <div class="ha-detail-layers" id="haDetailLayers"></div>
 
     <div class="ha-resonate-block">
       <p class="ha-resonate-prompt">Does this resonate?</p>
@@ -157,12 +174,7 @@
       <a href="https://theharthabits.com/assessment" class="ha-share-link">Share this assessment</a>
     </div>
 
-    <div class="ha-praksis-block">
-      <p class="ha-praksis-eyebrow">Ready to go deeper?</p>
-      <p class="ha-praksis-heading">Praksis is where the work happens.</p>
-      <p class="ha-praksis-body">The assessment shows you where you are. Praksis is the daily practice that moves you. It meets you where you are and walks with you through the Habits that need the most attention right now.</p>
-      <a href="https://theharthabits.com/praksis" class="ha-praksis-btn">Learn About Praksis</a>
-    </div>
+    <div class="ha-print-footer">theharthabits.com</div>
   </div>
 
 </div>
@@ -172,16 +184,31 @@
   var WORKER = 'https://hart-habits-assessment.bridgettrhart.workers.dev/submit';
 
   var habits = [
-    { name:'SELF', layer:'Foundation Layer', declaration:'I am an exquisite and unique being. Everything flows through me and I know, love, and respect the vessel I live in.', low:'Jealous / Insecure', high:'Confident / Self-Aware', copy:{ low:'It feels like fate has helped everyone else and left you out, and you cannot quite figure out why.', mid:'You look capable from the outside, but inside you feel like you have been handling everyone else\'s needs at the expense of your own.', high:'You feel worthy. Not because you\'re perfect, but because you\'ve made peace with the complexity of who you actually are.' }},
-    { name:'TRUTH', layer:'Foundation Layer', declaration:'I face objective and subjective truths head on and carry them simultaneously, even when they conflict.', low:'Judgemental', high:'Open Minded', copy:{ low:'The world feels safer when you stay close to people who see things the way you do and keep your distance from everyone else.', mid:'You\'re not closed off, but you keep interactions brief because you\'re not sure accepting someone\'s perspective means endorsing their choices.', high:'You\'ve learned to hold your own truth and someone else\'s conflicting truth at the same time, and you understand that\'s exactly what sets you free.' }},
-    { name:'TRUST', layer:'Operating Layer', declaration:'I choose to trust as a default because I listen to my inner voice and I know how to see and carry truth.', low:'Guarded', high:'Trustworthy', copy:{ low:'You have to stay vigilant, because the moment you let your guard down or share too much, someone will use it against you.', mid:'You\'re generous and well-meaning, but you keep finding yourself drained by people you were just trying to help.', high:'When you invest in others freely, doors open, and you\'ve seen enough of that to know that trust is worth the risk.' }},
-    { name:'THOUGHTS', layer:'Operating Layer', declaration:'I allow and direct my thoughts to focus on those things that I want to attract more of.', low:'Victimized', high:'Courageous', copy:{ low:'You have to keep track of every wrong done to you, because if you let it go, it will just happen again.', mid:'You notice when you\'re replaying things that already happened, and you\'re starting to catch yourself and redirect.', high:'Because you\'re not carrying old grievances, you can walk into each situation fresh and see it clearly.' }},
-    { name:'TALK', layer:'Operating Layer', declaration:'I use my words to exponentially strengthen and uplift myself and others.', low:'Gossip', high:'Wise', copy:{ low:'You\'re somehow always in the middle of everyone\'s drama, and you genuinely can\'t figure out how you keep ending up there.', mid:'Other people\'s problems have a way of making your own feel a little more manageable.', high:'You feel genuinely connected to the people around you, and their pain matters to you the way your own does.' }},
-    { name:'NON-VERBALS', layer:'Operating Layer', declaration:'I keep my cool physically when faced with a tough situation. It gives me time to process before I respond.', low:'Volatile', high:'Calm, Cool, Collected', copy:{ low:'Your reactions are strong because the situations that trigger them are genuinely out of line, and people need to know that.', mid:'You\'re comfortable with your feelings and okay if the world sees them, though sometimes they move through you stronger than you expect.', high:'You take the time to listen and process before you respond, and people trust you with their biggest things because nothing rattles you.' }},
-    { name:'SHOW', layer:'Evidence Layer', declaration:'I give my inner world a form I can see, hear, touch, and show when it\'s time.', low:'Insecure (perceived as conceited)', high:'Humble', copy:{ low:'You make sure people know what you\'ve accomplished, even when the credit isn\'t entirely yours to take.', mid:'You\'re proud of what you\'ve built, but underneath it you\'re still not sure it\'s enough, and you\'re not quite ready to let people see both sides of that.', high:'Everything you\'ve built feels like a blessing, and that gratitude is what keeps you generous with it.' }},
-    { name:'PROTECT', layer:'Evidence Layer', declaration:'I protect myself and others from my feelings and judgements and I protect my secrets and theirs from the rest of the world.', low:'Manipulative', high:'Unshakeable / Fortitude', copy:{ low:'You don\'t mean to hurt anyone, but if sharing what you know helps you move forward, it\'s hard to see why that\'s a problem.', mid:'You try to stay positive, but you\'re more caught up in what\'s going on around you than you\'d like to admit, and the things you know, you share.', high:'You carry what people give you quietly and without complaint, because you know you have the strength to hold it.' }},
-    { name:'ENDURE', layer:'Long Game Layer', declaration:'I consistently implement realistic small steps towards my vision.', low:'Isolated / Afraid', high:'Powerful / Inspired', copy:{ low:'Confrontation costs too much, and walking away feels a lot safer than trying to face something head on.', mid:'Life feels largely out of your control, so you focus on making it through each day as best you can.', high:'Adversity doesn\'t stop you. It teaches you, and you come out of hard seasons more certain of what you\'re capable of.' }},
-    { name:'HOPE', layer:'Long Game Layer', declaration:'I maintain or find hope, even when it is not easy.', low:'Resigned / Pessimistic', high:'Optimistically Expectant', copy:{ low:'You expect things to go wrong, and at this point you\'re almost used to it, which is its own kind of exhaustion.', mid:'You\'re doing your best to do the right things, but it\'s hard not to wonder why it seems to work out for everyone else and not for you.', high:'You have no doubt that the best outcomes are coming. It\'s just a matter of timing and finding the right people to do the work with.' }}
+    { name:'SELF', layer:'Foundation Layer', declaration:'I am an exquisite and unique being. Everything flows through me and I know, love, and respect the vessel I live in.', copy:{ low:'It feels like fate has helped everyone else and left you out, and you can\'t quite figure out why.', mid:'Capable on the outside, but inside it feels like everyone else\'s needs have been coming first at the expense of your own.', high:'There\'s a sense of worthiness here, not because of perfection, but because of real peace with the full complexity of who you are.' }},
+    { name:'TRUTH', layer:'Foundation Layer', declaration:'I face objective and subjective truths head on and carry them simultaneously, even when they conflict.', copy:{ low:'The world feels safer when you stay close to people who see things the way you do and keep your distance from everyone else.', mid:'Not closed off exactly, but interactions stay brief, accepting someone\'s perspective still feels too close to endorsing their choices.', high:'Holding your own truth and someone else\'s conflicting truth at the same time has become second nature, and that\'s exactly what sets you free.' }},
+    { name:'TRUST', layer:'Operating Layer', declaration:'I choose to trust as a default because I listen to my inner voice and I know how to see and carry truth.', copy:{ low:'Staying vigilant feels like survival, the moment the guard comes down or too much gets shared, someone finds a way to use it.', mid:'Generous and well-meaning, but somehow always ending up drained by the very people you were trying to help.', high:'When you invest in others freely, doors open, and you\'ve seen enough of that to know that trust is worth the risk.' }},
+    { name:'THOUGHTS', layer:'Operating Layer', declaration:'I allow and direct my thoughts to focus on those things that I want to attract more of.', copy:{ low:'Keeping track of every wrong feels like protection, because letting it go just means it happens again.', mid:'There\'s an awareness now of when the mind replays things that already happened, and a growing ability to catch it and redirect.', high:'Because you\'re not carrying old grievances, you can walk into each situation fresh and see it clearly.' }},
+    { name:'TALK', layer:'Operating Layer', declaration:'I use my words to exponentially strengthen and uplift myself and others.', copy:{ low:'Somehow always in the middle of everyone\'s drama, and genuinely unsure how it keeps happening.', mid:'Other people\'s problems have a way of making your own feel a little more manageable.', high:'There\'s a genuine connection to the people around you, their pain lands the way your own does.' }},
+    { name:'NON-VERBALS', layer:'Operating Layer', declaration:'I keep my cool physically when faced with a tough situation. It gives me time to process before I respond.', copy:{ low:'Your reactions are strong because the situations that trigger them are genuinely out of line, and people need to know that.', mid:'Comfortable with feelings and okay if the world sees them, though sometimes they move through stronger than expected.', high:'Taking time to listen and process before responding means people bring their biggest things, because nothing rattles you.' }},
+    { name:'SHOW', layer:'Evidence Layer', declaration:'I give my inner world a form I can see, hear, touch, and show when it\'s time.', copy:{ low:'Making sure people know what\'s been accomplished matters, even when the credit isn\'t entirely yours to take.', mid:'Proud of what\'s been built, but underneath there\'s still a question of whether it\'s enough, and not quite ready to let people see both sides of that.', high:'Everything you\'ve built feels like a blessing, and that gratitude is what keeps you generous with it.' }},
+    { name:'PROTECT', layer:'Evidence Layer', declaration:'I protect myself and others from my feelings and judgements and I protect my secrets and theirs from the rest of the world.', copy:{ low:'There\'s no intention to hurt anyone, but if sharing what you know helps move things forward, it\'s hard to see why that\'s a problem.', mid:'Staying positive is the goal, but it\'s easy to get caught up in what\'s happening around you, and what you know has a way of slipping out.', high:'What people give you gets carried quietly and without complaint, because the strength to hold it is there.' }},
+    { name:'ENDURE', layer:'Long Game Layer', declaration:'I consistently implement realistic small steps towards my vision.', copy:{ low:'Confrontation costs too much, and walking away feels a lot safer than trying to face something head on.', mid:'Life feels largely out of control, so the focus stays on making it through each day as best as possible.', high:'Adversity doesn\'t stop you, it teaches you, and you come out of hard seasons more certain of what you\'re capable of.' }},
+    { name:'HOPE', layer:'Long Game Layer', declaration:'I maintain or find hope, even when it is not easy.', copy:{ low:'Expecting things to go wrong has become familiar, which is its own kind of exhaustion.', mid:'Doing the right things, putting in the work, but it\'s hard not to wonder why it seems to work out for everyone else and not for you.', high:'There\'s no doubt the best outcomes are coming, it\'s just a matter of timing and finding the right people to share the journey with.' }}
+  ];
+
+  var layers = [
+    { name:'Foundation', cls:'foundation', habitNames:['SELF','TRUTH'],
+      opener:'Before anything else -- there\'s you.',
+      closer:'Everything else you do in relationship runs through here first.' },
+    { name:'Operating', cls:'operating', habitNames:['TRUST','THOUGHTS','TALK','NON-VERBALS'],
+      opener:'This is what people actually experience when they\'re with you.',
+      closer:'This is the layer people feel before you say a word.' },
+    { name:'Evidence', cls:'evidence', habitNames:['SHOW','PROTECT'],
+      opener:'Love has to go somewhere. This is where it shows up.',
+      closer:'Love without evidence is just intention. This is where it gets real.' },
+    { name:'Long Game', cls:'long-game', habitNames:['ENDURE','HOPE'],
+      opener:'This is what you\'re made of when things get hard and stay hard.',
+      closer:'This layer is the proof. Love is either something you keep choosing or it isn\'t.' }
   ];
 
   var scores = {};
@@ -270,10 +297,23 @@
       snap.appendChild(row);
     });
 
-    // Build single detail paragraph — sorted low to high
-    var sorted = habits.slice().sort(function(a,b){ return scores[a.name] - scores[b.name]; });
-    var sentences = sorted.map(function(h){ return getCopy(h, scores[h.name]); });
-    document.getElementById('haDetailPara').textContent = sentences.join(' ');
+    // Build layer sections
+    var layersEl = document.getElementById('haDetailLayers');
+    layersEl.innerHTML = '';
+    layers.forEach(function(layer) {
+      var sentences = layer.habitNames.map(function(name) {
+        var h = habits.find(function(x){ return x.name === name; });
+        return getCopy(h, scores[name]);
+      }).join(' ');
+      var div = document.createElement('div');
+      div.className = 'ha-layer ha-layer-' + layer.cls;
+      div.innerHTML =
+        '<p class="ha-layer-eyebrow">' + layer.name + '</p>' +
+        '<p class="ha-layer-opener">' + layer.opener + '</p>' +
+        '<p class="ha-layer-copy">' + sentences + '</p>' +
+        '<p class="ha-layer-closer">' + layer.closer + '</p>';
+      layersEl.appendChild(div);
+    });
   }
 
   // Start button
