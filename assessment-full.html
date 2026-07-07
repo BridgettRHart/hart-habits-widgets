@@ -229,15 +229,15 @@
   var layers = [
     { name:'Foundation', cls:'foundation', habitNames:['SELF','TRUTH'],
       opener:'Before anything else -- there\'s you.',
-      closer:'Everything else you do in relationship runs through here first.' },
+      closer:null },
     { name:'Operating', cls:'operating', habitNames:['TRUST','THOUGHTS','TALK','NON-VERBALS'],
-      opener:'This is what people actually experience when they\'re with you.',
+      opener:null,
       closer:'This is the layer people feel before you say a word.' },
     { name:'Evidence', cls:'evidence', habitNames:['SHOW','PROTECT'],
-      opener:'Love has to go somewhere. This is where it shows up.',
+      opener:null,
       closer:'Love without evidence is just intention. This is where it gets real.' },
     { name:'Long Game', cls:'long-game', habitNames:['ENDURE','HOPE'],
-      opener:'This is what you\'re made of when things get hard and stay hard.',
+      opener:null,
       closer:'This layer is the proof. Love is either something you keep choosing or it isn\'t.' }
   ];
 
@@ -325,9 +325,9 @@
       div.className = 'ha-layer ha-layer-' + layer.cls;
       div.innerHTML =
         '<p class="ha-layer-eyebrow">' + layer.name + '</p>' +
-        '<p class="ha-layer-opener">' + layer.opener + '</p>' +
+        (layer.opener ? '<p class="ha-layer-opener">' + layer.opener + '</p>' : '') +
         '<p class="ha-layer-copy">' + sentences + '</p>' +
-        '<p class="ha-layer-closer">' + layer.closer + '</p>';
+        (layer.closer ? '<p class="ha-layer-closer">' + layer.closer + '</p>' : '');
       layersEl.appendChild(div);
     });
   }
