@@ -111,13 +111,21 @@
 
   /* Compact layer sections */
   .ha-detail-layers{margin-bottom:8px!important}
-  .ha-layer{padding:5px 10px!important;margin-bottom:5px!important}
-  .ha-layer-eyebrow{font-size:8px!important;margin-bottom:2px!important}
-  .ha-layer-opener{font-size:9px!important;margin-bottom:4px!important}
-  .ha-layer-copy{font-size:9.5px!important;line-height:1.45!important;margin-bottom:4px!important}
-  .ha-layer-closer{font-size:9px!important}
+  .ha-layer{padding:5px 10px!important;margin-bottom:5px!important;background:none!important;border-left:2px solid #999!important}
+  .ha-layer-eyebrow{font-size:8px!important;margin-bottom:2px!important;color:#333!important}
+  .ha-layer-opener{font-size:9px!important;margin-bottom:4px!important;color:#000!important;font-weight:600!important}
+  .ha-layer-copy{font-size:9.5px!important;line-height:1.45!important;margin-bottom:4px!important;color:#222!important}
+  .ha-layer-closer{font-size:9px!important;color:#444!important}
 
-  .ha-print-footer{display:block!important}
+  /* B&W friendly overrides */
+  .ha-results-heading{color:#000!important}
+  .ha-print-header-name{color:#000!important}
+  .ha-print-header-url{color:#555!important}
+  .ha-snap-label{color:#333!important}
+  .ha-snap-marker{background:#444!important;border-color:#fff!important;box-shadow:0 0 0 1px #444!important}
+  .ha-snap-midline{background:rgba(0,0,0,.35)!important}
+
+  .ha-print-footer{display:block!important;color:#555!important}
 }
 
 /* Resonate email */
@@ -218,7 +226,7 @@
       <a href="https://theharthabits.com/assessment" class="ha-share-link">Share this assessment</a>
     </div>
 
-    <div class="ha-print-footer">theharthabits.com</div>
+    <div class="ha-print-footer" id="haPrintFooter"></div>
   </div>
 
 </div>
@@ -242,7 +250,7 @@
 
   var layers = [
     { name:'Foundation', cls:'foundation', habitNames:['SELF','TRUTH'],
-      opener:'Before anything else -- there\'s you.',
+      opener:'Before anything else – there’s you.',
       closer:null },
     { name:'Operating', cls:'operating', habitNames:['TRUST','THOUGHTS','TALK','NON-VERBALS'],
       opener:null,
@@ -316,6 +324,11 @@
       habits.forEach(function(h){ payload.scores[h.name] = scores[h.name]; });
       fetch(WORKER, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) }).catch(function(){});
     }
+
+    // Date stamp footer
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var now = new Date();
+    document.getElementById('haPrintFooter').textContent = 'Assessment taken ' + months[now.getMonth()] + ' ' + now.getFullYear();
 
     // Build snapshot
     var snap = document.getElementById('haSnapshot');
