@@ -72,10 +72,42 @@
 .ha-layer-closer{font-size:14px;font-style:italic;color:#666;line-height:1.6}
 
 /* Print footer */
-.ha-print-footer{display:none;text-align:center;font-size:12px;color:#aaa;margin-top:40px;padding-top:20px;border-top:1px solid #e0dbd3}
+.ha-print-footer{display:none;text-align:center;font-size:11px;color:#888;margin-top:20px;padding-top:12px;border-top:1px solid #e0dbd3;letter-spacing:.1em;text-transform:uppercase}
+
 @media print{
-  .ha-print-footer{display:block}
-  .ha-actions,.ha-resonate-block{display:none}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  @page{margin:.5in}
+
+  /* Hide WordPress/Divi chrome */
+  #main-header,#main-footer,#top-header,.et-fixed-header,
+  .et_pb_section:not(:has(.ha)),.et-l--header,.et-l--footer,
+  header,footer,nav{display:none!important}
+
+  /* Hide non-result widget sections */
+  .ha-intro,.ha-question,.ha-insight-block,
+  .ha-resonate-block,.ha-actions,
+  .ha-results-eyebrow,.ha-results-sub{display:none!important}
+
+  /* Compact heading */
+  .ha-results-heading{font-size:16px!important;margin-bottom:10px!important}
+
+  /* Compact snapshot bars */
+  .ha-snapshot{margin-bottom:14px!important}
+  .ha-snap-row{margin-bottom:3px!important}
+  .ha-snap-bar{height:4px!important}
+  .ha-snap-marker{width:9px!important;height:9px!important}
+  .ha-snap-label{font-size:8px!important;width:80px!important}
+  .ha-snap-midline{top:-4px!important;height:12px!important}
+
+  /* Compact layer sections */
+  .ha-detail-layers{margin-bottom:12px!important}
+  .ha-layer{padding:8px 12px!important;margin-bottom:8px!important}
+  .ha-layer-eyebrow{font-size:8px!important;margin-bottom:3px!important}
+  .ha-layer-opener{font-size:10px!important;margin-bottom:5px!important}
+  .ha-layer-copy{font-size:10px!important;line-height:1.5!important;margin-bottom:5px!important}
+  .ha-layer-closer{font-size:9px!important}
+
+  .ha-print-footer{display:block!important}
 }
 
 /* Resonate email */
