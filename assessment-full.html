@@ -76,7 +76,7 @@
 
 @media print{
   *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-  @page{margin:.5in}
+  @page{margin:.35in .45in}
 
   /* Hide WordPress/Divi chrome */
   #main-header,#main-footer,#top-header,.et-fixed-header,
@@ -88,23 +88,28 @@
   .ha-resonate-block,.ha-actions,
   .ha-results-eyebrow,.ha-results-sub{display:none!important}
 
+  /* Print header */
+  .ha-print-header{display:flex!important;justify-content:space-between;align-items:center;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e0dbd3}
+  .ha-print-header-name{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#c18c5d;font-weight:500}
+  .ha-print-header-url{font-size:10px;color:#aaa;letter-spacing:.05em}
+
   /* Compact heading */
-  .ha-results-heading{font-size:16px!important;margin-bottom:10px!important}
+  .ha-results-heading{font-size:15px!important;margin-bottom:8px!important}
 
   /* Compact snapshot bars */
-  .ha-snapshot{margin-bottom:14px!important}
-  .ha-snap-row{margin-bottom:3px!important}
+  .ha-snapshot{margin-bottom:10px!important}
+  .ha-snap-row{margin-bottom:2px!important}
   .ha-snap-bar{height:4px!important}
   .ha-snap-marker{width:9px!important;height:9px!important}
   .ha-snap-label{font-size:8px!important;width:80px!important}
   .ha-snap-midline{top:-4px!important;height:12px!important}
 
   /* Compact layer sections */
-  .ha-detail-layers{margin-bottom:12px!important}
-  .ha-layer{padding:8px 12px!important;margin-bottom:8px!important}
-  .ha-layer-eyebrow{font-size:8px!important;margin-bottom:3px!important}
-  .ha-layer-opener{font-size:10px!important;margin-bottom:5px!important}
-  .ha-layer-copy{font-size:10px!important;line-height:1.5!important;margin-bottom:5px!important}
+  .ha-detail-layers{margin-bottom:8px!important}
+  .ha-layer{padding:5px 10px!important;margin-bottom:5px!important}
+  .ha-layer-eyebrow{font-size:8px!important;margin-bottom:2px!important}
+  .ha-layer-opener{font-size:9px!important;margin-bottom:4px!important}
+  .ha-layer-copy{font-size:9.5px!important;line-height:1.45!important;margin-bottom:4px!important}
   .ha-layer-closer{font-size:9px!important}
 
   .ha-print-footer{display:block!important}
@@ -181,6 +186,10 @@
 
   <!-- RESULTS -->
   <div class="ha-results" id="haResults">
+    <div class="ha-print-header" style="display:none">
+      <span class="ha-print-header-name">The Hart Habits</span>
+      <span class="ha-print-header-url">theharthabits.com</span>
+    </div>
     <p class="ha-results-eyebrow">Your Results</p>
     <h2 class="ha-results-heading">Here is where you are right now.</h2>
     <p class="ha-results-sub">The marker shows where you placed yourself on each Habit. The center line is the midpoint.</p>
