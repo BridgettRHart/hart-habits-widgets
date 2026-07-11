@@ -236,39 +236,6 @@
     renderAll(curHabit);
   });
 
-  // ---------------------------------------------------------------------------
-  // Label rendering
-  // ---------------------------------------------------------------------------
-  function drawLabels() {
-    var s = scale();
-    ctx.save();
-    ctx.textAlign    = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.shadowColor  = 'rgba(0,0,0,0.35)';
-    ctx.shadowBlur   = 4;
-
-    habits.forEach(function (h) {
-      var cx       = h.cx * s;
-      var cy       = h.cy * s;
-      var fontSize = Math.round(Math.max(7, h.fontSize * s));
-      ctx.font      = '600 ' + fontSize + 'px "Josefin Sans", sans-serif';
-      ctx.fillStyle = h.textColor || '#fff';
-      ctx.letterSpacing = '0.08em';
-
-      // Split hyphenated names (NON-VERBALS) onto two lines
-      var parts = h.id.split('-');
-      if (parts.length === 1) {
-        ctx.fillText(h.id, cx, cy);
-      } else {
-        var lh = fontSize * 1.35;
-        ctx.fillText(parts[0],  cx, cy - lh / 2);
-        ctx.fillText(parts[1],  cx, cy + lh / 2);
-      }
-    });
-
-    ctx.shadowBlur = 0;
-    ctx.restore();
-  }
 
   // ---------------------------------------------------------------------------
   // Hit testing — ellipse check in native coords
@@ -288,16 +255,7 @@
     return null;
   }
 
-  // ---------------------------------------------------------------------------
-  // Render: labels only — no glow
-  // ---------------------------------------------------------------------------
-  function renderAll(h) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawLabels();
-  }
-
-  // Draw labels as soon as fonts are ready
-  document.fonts.ready.then(function () { renderAll(null); });
+  function renderAll() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
   // ---------------------------------------------------------------------------
   // Tooltip
