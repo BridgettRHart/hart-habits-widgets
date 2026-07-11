@@ -156,7 +156,7 @@
   var habits = [
     // Evidence (plum)
     { id:'PROTECT', num:'08', layer:'Evidence',
-      cx:390, cy:315, rx:80, ry:62,
+      cx:415, cy:315, rx:80, ry:62,
       fontSize:20, fill:'#6b576b',
       decl:'I protect myself and others from my feelings and judgements and I protect my secrets and theirs from the rest of the world.',
       url:'/protect' },
@@ -183,19 +183,19 @@
       decl:'I use my words to exponentially strengthen and uplift myself and others.',
       url:'/talk' },
     { id:'NON-VERBALS', num:'06', layer:'Operating',
-      cx:242, cy:458, rx:65, ry:46,
+      cx:258, cy:458, rx:65, ry:46,
       fontSize:11, fill:'#8eccd4',
       decl:'I keep my cool physically when faced with a tough situation. It gives me time to process before I respond.',
       url:'/non-verbals' },
 
     // Foundation (peach) — darker text on light background
     { id:'TRUTH', num:'02', layer:'Foundation',
-      cx:245, cy:242, rx:52, ry:44,
+      cx:238, cy:252, rx:52, ry:44,
       fontSize:13, fill:'#f5c9a4', textColor:'#5c3520',
       decl:'I face objective and subjective truths head on and carry them simultaneously, even when they conflict.',
       url:'/truth' },
     { id:'SELF', num:'01', layer:'Foundation',
-      cx:248, cy:318, rx:56, ry:52,
+      cx:248, cy:332, rx:56, ry:52,
       fontSize:18, fill:'#f5c9a4', textColor:'#5c3520',
       decl:'I am an exquisite and unique being. Everything flows through me and I know, love, and respect the vessel I live in.',
       url:'/self' },
@@ -207,7 +207,7 @@
       decl:'I maintain or find hope, even when it is not easy.',
       url:'/hope' },
     { id:'ENDURE', num:'09', layer:'Long Game',
-      cx:438, cy:225, rx:110, ry:92,
+      cx:415, cy:225, rx:110, ry:92,
       fontSize:22, fill:'#c2925e',
       decl:'I consistently implement realistic small steps towards my vision.',
       url:'/endure' }
@@ -288,36 +288,10 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Render: labels always, hover glow on top when active
+  // Render: labels only — no glow
   // ---------------------------------------------------------------------------
   function renderAll(h) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Hover glow first (under labels)
-    if (h) {
-      var s  = scale();
-      var cx = h.cx * s;
-      var cy = h.cy * s;
-      var rx = h.rx * s;
-      var ry = h.ry * s;
-
-      ctx.save();
-      ctx.translate(cx, cy);
-      ctx.scale(rx, ry);
-      var grad = ctx.createRadialGradient(0, 0, 0.1, 0, 0, 1);
-      grad.addColorStop(0,   'rgba(255,255,255,0.38)');
-      grad.addColorStop(0.65,'rgba(255,255,255,0.18)');
-      grad.addColorStop(1,   'rgba(255,255,255,0)');
-      ctx.globalCompositeOperation = 'screen';
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(0, 0, 1, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-      ctx.globalCompositeOperation = 'source-over';
-    }
-
-    // Labels always on top
     drawLabels();
   }
 
