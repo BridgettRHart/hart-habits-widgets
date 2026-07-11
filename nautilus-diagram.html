@@ -1,0 +1,362 @@
+<title>Hart Habits — Nautilus Diagram</title>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+.hhn-wrap {
+  font-family: 'Josefin Sans', sans-serif;
+  position: relative;
+  max-width: 520px;
+  min-width: 260px;
+  margin: 0 auto;
+  -webkit-tap-highlight-color: transparent;
+}
+.hhn-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+.hhn-seg {
+  cursor: pointer;
+}
+.hhn-seg ellipse {
+  transition: filter 0.2s ease;
+}
+.hhn-seg:hover ellipse,
+.hhn-seg.tap-active ellipse {
+  filter: url(#seg-hover) !important;
+}
+.hhn-seg text {
+  pointer-events: none;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+}
+
+/* Tooltip */
+.hhn-tip {
+  display: none;
+  position: absolute;
+  background: #fdfcfb;
+  border: 0.5px solid rgba(0,0,0,0.10);
+  border-radius: 10px;
+  padding: 14px 16px 12px;
+  width: 230px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+  pointer-events: none;
+  z-index: 20;
+}
+.hhn-tip.show { display: block; }
+.hhn-t-num {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #c18c5d;
+  margin: 0 0 3px;
+  font-weight: 400;
+}
+.hhn-t-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2a2a2a;
+  letter-spacing: 0.07em;
+  margin: 0 0 8px;
+}
+.hhn-t-decl {
+  font-size: 12.5px;
+  font-style: italic;
+  color: #555;
+  line-height: 1.65;
+  margin: 0 0 11px;
+  font-weight: 400;
+}
+.hhn-t-link {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #056367;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+.hhn-t-link:hover { text-decoration: underline; }
+
+/* Layer legend */
+.hhn-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  justify-content: center;
+  margin-top: 12px;
+}
+.hhn-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #555;
+}
+.hhn-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+</style>
+
+<div class="hhn-wrap" id="hhnWrap">
+  <svg viewBox="0 0 520 500" xmlns="http://www.w3.org/2000/svg" id="hhnSvg" aria-label="Hart Habits Nautilus Diagram">
+    <defs>
+      <!-- Organic blob displacement filter -->
+      <filter id="blob" x="-8%" y="-8%" width="116%" height="116%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="7" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <!-- Hover/active state filter -->
+      <filter id="seg-hover" x="-8%" y="-8%" width="116%" height="116%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="7" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G" result="warped"/>
+        <feDropShadow dx="0" dy="3" stdDeviation="8" flood-color="rgba(0,0,0,0.18)" in="warped"/>
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="hhn-tip" id="hhnTip">
+    <p class="hhn-t-num" id="htnNum"></p>
+    <p class="hhn-t-name" id="htnName"></p>
+    <p class="hhn-t-decl" id="htnDecl"></p>
+    <a class="hhn-t-link" id="htnLink" href="#"></a>
+  </div>
+
+  <div class="hhn-legend">
+    <span class="hhn-legend-item"><span class="hhn-legend-dot" style="background:#f5c9a4"></span>Foundation</span>
+    <span class="hhn-legend-item"><span class="hhn-legend-dot" style="background:#8eccd4"></span>Operating</span>
+    <span class="hhn-legend-item"><span class="hhn-legend-dot" style="background:#6b576b"></span>Evidence</span>
+    <span class="hhn-legend-item"><span class="hhn-legend-dot" style="background:#c2925e"></span>Long Game</span>
+  </div>
+</div>
+
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+
+  // Segments: drawn outer-to-inner so inner ones sit on top
+  // cx, cy = center; rx, ry = radii; rot = rotation degrees
+  // tc = text color; fs = font size; label = string or [line1, line2]
+  var segs = [
+    {
+      id: 'HOPE', num: '10', layer: 'Long Game',
+      cx: 192, cy: 153, rx: 92, ry: 56, rot: -9,
+      fill: '#c2925e', tc: '#fff', label: 'HOPE', fs: 14,
+      decl: 'I maintain or find hope, even when it is not easy.',
+      url: '/hope'
+    },
+    {
+      id: 'ENDURE', num: '09', layer: 'Long Game',
+      cx: 372, cy: 285, rx: 75, ry: 83, rot: 18,
+      fill: '#c2925e', tc: '#fff', label: 'ENDURE', fs: 11,
+      decl: 'I consistently implement realistic small steps towards my vision.',
+      url: '/endure'
+    },
+    {
+      id: 'PROTECT', num: '08', layer: 'Evidence',
+      cx: 302, cy: 228, rx: 59, ry: 51, rot: -9,
+      fill: '#6b576b', tc: '#fff', label: 'PROTECT', fs: 9.5,
+      decl: 'I protect myself and others from my feelings and judgements and I protect my secrets and theirs from the rest of the world.',
+      url: '/protect'
+    },
+    {
+      id: 'SHOW', num: '07', layer: 'Evidence',
+      cx: 296, cy: 345, rx: 59, ry: 53, rot: 11,
+      fill: '#6b576b', tc: '#fff', label: 'SHOW', fs: 12,
+      decl: 'I give my inner world a form I can see, hear, touch, and show when it\'s time.',
+      url: '/show'
+    },
+    {
+      id: 'TRUST', num: '03', layer: 'Operating',
+      cx: 155, cy: 218, rx: 45, ry: 41, rot: -13,
+      fill: '#8eccd4', tc: '#03464b', label: 'TRUST', fs: 10,
+      decl: 'I choose to trust as a default because I listen to my inner voice and I know how to see and carry truth.',
+      url: '/trust'
+    },
+    {
+      id: 'THOUGHTS', num: '04', layer: 'Operating',
+      cx: 126, cy: 284, rx: 42, ry: 48, rot: 6,
+      fill: '#8eccd4', tc: '#03464b', label: 'THOUGHTS', fs: 8,
+      decl: 'I allow and direct my thoughts to focus on those things that I want to attract more of.',
+      url: '/thoughts'
+    },
+    {
+      id: 'TALK', num: '05', layer: 'Operating',
+      cx: 130, cy: 362, rx: 48, ry: 41, rot: -11,
+      fill: '#8eccd4', tc: '#03464b', label: 'TALK', fs: 11,
+      decl: 'I use my words to exponentially strengthen and uplift myself and others.',
+      url: '/talk'
+    },
+    {
+      id: 'NON-VERBALS', num: '06', layer: 'Operating',
+      cx: 222, cy: 378, rx: 52, ry: 38, rot: -6,
+      fill: '#8eccd4', tc: '#03464b', label: ['NON-', 'VERBALS'], fs: 8,
+      decl: 'I keep my cool physically when faced with a tough situation. It gives me time to process before I respond.',
+      url: '/non-verbals'
+    },
+    {
+      id: 'TRUTH', num: '02', layer: 'Foundation',
+      cx: 228, cy: 222, rx: 44, ry: 40, rot: 9,
+      fill: '#f5c9a4', tc: '#4a3020', label: 'TRUTH', fs: 10,
+      decl: 'I face objective and subjective truths head on and carry them simultaneously, even when they conflict.',
+      url: '/truth'
+    },
+    {
+      id: 'SELF', num: '01', layer: 'Foundation',
+      cx: 250, cy: 282, rx: 45, ry: 43, rot: 0,
+      fill: '#f5c9a4', tc: '#4a3020', label: 'SELF', fs: 13,
+      decl: 'I am an exquisite and unique being. Everything flows through me and I know, love, and respect the vessel I live in.',
+      url: '/self'
+    }
+  ];
+
+  var svg = document.getElementById('hhnSvg');
+  var tip = document.getElementById('hhnTip');
+  var wrap = document.getElementById('hhnWrap');
+  var isMobile = !window.matchMedia('(hover: hover)').matches;
+  var lastTapped = null;
+  var activeSeg = null;
+
+  segs.forEach(function (h) {
+    var g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'hhn-seg');
+    g.setAttribute('role', 'button');
+    g.setAttribute('aria-label', h.id + ' - ' + h.layer);
+
+    // Ellipse
+    var el = document.createElementNS(NS, 'ellipse');
+    el.setAttribute('cx', h.cx);
+    el.setAttribute('cy', h.cy);
+    el.setAttribute('rx', h.rx);
+    el.setAttribute('ry', h.ry);
+    el.setAttribute('fill', h.fill);
+    el.setAttribute('stroke', '#fdfcfb');
+    el.setAttribute('stroke-width', '3.5');
+    el.setAttribute('filter', 'url(#blob)');
+    if (h.rot !== 0) {
+      el.setAttribute('transform', 'rotate(' + h.rot + ',' + h.cx + ',' + h.cy + ')');
+    }
+    g.appendChild(el);
+
+    // Label
+    var txt = document.createElementNS(NS, 'text');
+    var lines = Array.isArray(h.label) ? h.label : [h.label];
+    var lineH = h.fs * 1.28;
+    var startY = h.cy - (lines.length - 1) * lineH / 2;
+    txt.setAttribute('x', h.cx);
+    txt.setAttribute('y', startY);
+    txt.setAttribute('text-anchor', 'middle');
+    txt.setAttribute('dominant-baseline', 'middle');
+    txt.setAttribute('fill', h.tc);
+    txt.setAttribute('font-size', h.fs);
+    txt.setAttribute('font-family', 'Josefin Sans, sans-serif');
+    txt.setAttribute('font-weight', '500');
+    txt.setAttribute('letter-spacing', '0.09em');
+
+    lines.forEach(function (line, i) {
+      var ts = document.createElementNS(NS, 'tspan');
+      ts.setAttribute('x', h.cx);
+      ts.setAttribute('dy', i === 0 ? '0' : lineH);
+      ts.textContent = line;
+      txt.appendChild(ts);
+    });
+    g.appendChild(txt);
+
+    // Desktop hover
+    g.addEventListener('mouseenter', function (e) {
+      if (isMobile) return;
+      showTip(h);
+      positionTip(e);
+    });
+    g.addEventListener('mousemove', function (e) {
+      if (isMobile) return;
+      positionTip(e);
+    });
+    g.addEventListener('mouseleave', function () {
+      if (isMobile) return;
+      hideTip();
+    });
+
+    // Click: desktop navigates; mobile: first tap = tooltip, second = navigate
+    g.addEventListener('click', function (e) {
+      if (!isMobile) {
+        window.location.href = h.url;
+        return;
+      }
+      if (lastTapped === h.id) {
+        window.location.href = h.url;
+      } else {
+        e.stopPropagation();
+        if (activeSeg) activeSeg.classList.remove('tap-active');
+        g.classList.add('tap-active');
+        activeSeg = g;
+        lastTapped = h.id;
+        showTip(h);
+        positionTipTouch(h);
+      }
+    });
+
+    svg.appendChild(g);
+  });
+
+  // Close on outside tap
+  document.addEventListener('click', function () {
+    if (!isMobile) return;
+    hideTip();
+    if (activeSeg) { activeSeg.classList.remove('tap-active'); activeSeg = null; }
+    lastTapped = null;
+  });
+
+  function showTip(h) {
+    document.getElementById('htnNum').textContent = h.num + '  |  ' + h.layer;
+    document.getElementById('htnName').textContent = h.id;
+    document.getElementById('htnDecl').textContent = '“' + h.decl + '”';
+    var lnk = document.getElementById('htnLink');
+    lnk.textContent = 'Explore ' + h.id + ' →';
+    lnk.href = h.url;
+    tip.classList.add('show');
+  }
+
+  function hideTip() {
+    tip.classList.remove('show');
+  }
+
+  function positionTip(e) {
+    var rect = wrap.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    var y = e.clientY - rect.top;
+    place(x, y);
+  }
+
+  function positionTipTouch(h) {
+    // Position tooltip relative to segment center in SVG coords
+    var rect = wrap.getBoundingClientRect();
+    var svgW = svg.viewBox.baseVal.width; // 520
+    var svgH = svg.viewBox.baseVal.height; // 500
+    var scaleX = rect.width / svgW;
+    var scaleY = rect.height / svgH;
+    var x = h.cx * scaleX;
+    var y = h.cy * scaleY;
+    place(x, y);
+  }
+
+  function place(x, y) {
+    var tw = 234, th = 170;
+    var rect = wrap.getBoundingClientRect();
+    var left = x + 14;
+    var top = y - th - 8;
+    if (left + tw > rect.width - 4) left = x - tw - 14;
+    if (left < 4) left = 4;
+    if (top < 4) top = y + 14;
+    if (top + th > rect.height + 20) top = Math.max(4, y - th - 8);
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  }
+
+})();
+</script>
