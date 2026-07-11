@@ -185,15 +185,15 @@
       decl:'I keep my cool physically when faced with a tough situation. It gives me time to process before I respond.',
       url:'/non-verbals' },
 
-    // Foundation (peach) — center blobs
+    // Foundation (peach) — center blobs — darker text on light background
     { id:'TRUTH', num:'02', layer:'Foundation',
       cx:238, cy:235, rx:55, ry:48,
-      fill:'#f5c9a4',
+      fill:'#f5c9a4', textColor:'#5c3520',
       decl:'I face objective and subjective truths head on and carry them simultaneously, even when they conflict.',
       url:'/truth' },
     { id:'SELF', num:'01', layer:'Foundation',
       cx:248, cy:325, rx:58, ry:55,
-      fill:'#f5c9a4',
+      fill:'#f5c9a4', textColor:'#5c3520',
       decl:'I am an exquisite and unique being. Everything flows through me and I know, love, and respect the vessel I live in.',
       url:'/self' },
 
@@ -229,8 +229,42 @@
   resizeCanvas();
   window.addEventListener('resize', function () {
     resizeCanvas();
-    renderHover(null); // clear
+    renderAll(curHabit);
   });
+
+  // ---------------------------------------------------------------------------
+  // Label rendering
+  // ---------------------------------------------------------------------------
+  function drawLabels() {
+    var s = scale();
+    ctx.save();
+    ctx.textAlign    = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.shadowColor  = 'rgba(0,0,0,0.35)';
+    ctx.shadowBlur   = 4;
+
+    habits.forEach(function (h) {
+      var cx       = h.cx * s;
+      var cy       = h.cy * s;
+      var fontSize = Math.round(Math.max(8, 11 * s));
+      ctx.font      = '600 ' + fontSize + 'px "Josefin Sans", sans-serif';
+      ctx.fillStyle = h.textColor || '#fff';
+      ctx.letterSpacing = '0.08em';
+
+      // Split hyphenated names (NON-VERBALS) onto two lines
+      var parts = h.id.split('-');
+      if (parts.length === 1) {
+        ctx.fillText(h.id, cx, cy);
+      } else {
+        var lh = fontSize * 1.35;
+        ctx.fillText(parts[0],  cx, cy - lh / 2);
+        ctx.fillText(parts[1],  cx, cy + lh / 2);
+      }
+    });
+
+    ctx.shadowBlur = 0;
+    ctx.restore();
+  }
 
   // ---------------------------------------------------------------------------
   // Hit testing — ellipse check in native coords
@@ -251,33 +285,41 @@
   }
 
   // ---------------------------------------------------------------------------
-  // Hover glow — draw a white radial-gradient ellipse over the hovered blob
+  // Render: labels always, hover glow on top when active
   // ---------------------------------------------------------------------------
-  function renderHover(h) {
+  function renderAll(h) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (!h) return;
 
-    var s  = scale();
-    var cx = h.cx * s;
-    var cy = h.cy * s;
-    var rx = h.rx * s;
-    var ry = h.ry * s;
+    // Hover glow first (under labels)
+    if (h) {
+      var s  = scale();
+      var cx = h.cx * s;
+      var cy = h.cy * s;
+      var rx = h.rx * s;
+      var ry = h.ry * s;
 
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.scale(rx, ry);
-    var grad = ctx.createRadialGradient(0, 0, 0.1, 0, 0, 1);
-    grad.addColorStop(0,   'rgba(255,255,255,0.38)');
-    grad.addColorStop(0.65,'rgba(255,255,255,0.18)');
-    grad.addColorStop(1,   'rgba(255,255,255,0)');
-    ctx.globalCompositeOperation = 'screen';
-    ctx.fillStyle = grad;
-    ctx.beginPath();
-    ctx.arc(0, 0, 1, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-    ctx.globalCompositeOperation = 'source-over';
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.scale(rx, ry);
+      var grad = ctx.createRadialGradient(0, 0, 0.1, 0, 0, 1);
+      grad.addColorStop(0,   'rgba(255,255,255,0.38)');
+      grad.addColorStop(0.65,'rgba(255,255,255,0.18)');
+      grad.addColorStop(1,   'rgba(255,255,255,0)');
+      ctx.globalCompositeOperation = 'screen';
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(0, 0, 1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
+    // Labels always on top
+    drawLabels();
   }
+
+  // Draw labels as soon as fonts are ready
+  document.fonts.ready.then(function () { renderAll(null); });
 
   // ---------------------------------------------------------------------------
   // Tooltip
@@ -327,7 +369,7 @@
     canvas.style.cursor = h ? 'pointer' : 'default';
     if (h !== curHabit) {
       curHabit = h;
-      renderHover(h);
+      renderAll(h);
       if (h) { showTip(h); placeTip(e.clientX, e.clientY); }
       else   { hideTip(); }
     } else if (h) {
@@ -338,7 +380,7 @@
   canvas.addEventListener('mouseleave', function () {
     if (isMobile) return;
     curHabit = null;
-    renderHover(null);
+    renderAll(null);
     hideTip();
   });
 
@@ -355,7 +397,7 @@
     } else {
       lastTapped = h.id;
       curHabit   = h;
-      renderHover(h);
+      renderAll(h);
       showTip(h);
       placeTipNear(h);
       e.stopPropagation();
@@ -366,7 +408,7 @@
   document.addEventListener('click', function () {
     if (!isMobile) return;
     hideTip();
-    if (curHabit) { renderHover(null); curHabit = null; }
+    if (curHabit) { renderAll(null); curHabit = null; }
     lastTapped = null;
   });
 
