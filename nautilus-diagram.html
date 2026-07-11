@@ -5,33 +5,27 @@
 .hhn-wrap {
   font-family: 'Josefin Sans', sans-serif;
   position: relative;
-  max-width: 520px;
+  max-width: 600px;
   min-width: 260px;
   margin: 0 auto;
   -webkit-tap-highlight-color: transparent;
 }
-.hhn-wrap svg {
-  width: 100%;
-  height: auto;
+/* Spacer image holds the container's aspect ratio */
+.hhn-spacer {
   display: block;
-  overflow: visible;
-}
-.hhn-seg {
-  cursor: pointer;
-}
-.hhn-seg ellipse {
-  transition: filter 0.2s ease;
-}
-.hhn-seg:hover ellipse,
-.hhn-seg.tap-active ellipse {
-  filter: url(#seg-hover) !important;
-}
-.hhn-seg text {
+  width: 100%;
+  visibility: hidden;
   pointer-events: none;
-  font-family: 'Josefin Sans', sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.09em;
 }
+/* All PNG layers + canvas share the same absolute footprint */
+.hhn-layer, #hhnCanvas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: block;
+}
+.hhn-layer { pointer-events: none; }
+#hhnCanvas { cursor: default; }
 
 /* Tooltip */
 .hhn-tip {
@@ -83,280 +77,298 @@
 .hhn-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 16px;
+  gap: 5px 14px;
   justify-content: center;
-  margin-top: 12px;
+  margin-top: 10px;
 }
-.hhn-legend-item {
+.hhn-legend span {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   font-size: 11px;
-  letter-spacing: 0.06em;
-  color: #555;
+  letter-spacing: 0.05em;
+  color: #666;
 }
-.hhn-legend-dot {
-  width: 10px;
-  height: 10px;
+.hhn-legend i {
+  width: 9px; height: 9px;
   border-radius: 50%;
+  display: inline-block;
   flex-shrink: 0;
 }
 </style>
 
 <div class="hhn-wrap" id="hhnWrap">
-  <svg viewBox="0 0 520 500" xmlns="http://www.w3.org/2000/svg" id="hhnSvg" aria-label="Hart Habits Nautilus Diagram">
-    <defs>
-      <!-- Organic blob displacement filter -->
-      <filter id="blob" x="-8%" y="-8%" width="116%" height="116%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="7" result="noise"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G"/>
-      </filter>
-      <!-- Hover/active state filter -->
-      <filter id="seg-hover" x="-8%" y="-8%" width="116%" height="116%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="7" result="noise"/>
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G" result="warped"/>
-        <feDropShadow dx="0" dy="3" stdDeviation="8" flood-color="rgba(0,0,0,0.18)" in="warped"/>
-      </filter>
-    </defs>
-  </svg>
 
+  <!--
+    PNG layers — stacked in order (bottom to top):
+    1. Long Game  (bronze outer shell)
+    2. White outline (ring border + dividing lines)
+    3. Foundation  (peach: SELF + TRUTH)
+    4. Operating   (teal: TRUST, THOUGHTS, TALK, NON-VERBALS)
+    5. Evidence    (plum: SHOW + PROTECT)
+
+    To deploy on WordPress, replace the src paths with your
+    WordPress media library URLs for each file.
+  -->
+  <img class="hhn-layer" src="nautilus-zone-4-longgame.png"    alt="">
+  <img class="hhn-layer" src="nautilus-white-outline.png"       alt="">
+  <img class="hhn-layer" src="nautilus-zone-1-foundation.png"  alt="">
+  <img class="hhn-layer" src="nautilus-zone-2-operating.png"   alt="">
+  <img class="hhn-layer" src="nautilus-zone-3-evidence.png"    alt="">
+
+  <!-- Spacer keeps the 1:1 ratio -->
+  <img class="hhn-spacer" src="nautilus-zone-4-longgame.png" alt="">
+
+  <!-- Interaction overlay -->
+  <canvas id="hhnCanvas"></canvas>
+
+  <!-- Tooltip -->
   <div class="hhn-tip" id="hhnTip">
     <p class="hhn-t-num" id="htnNum"></p>
     <p class="hhn-t-name" id="htnName"></p>
     <p class="hhn-t-decl" id="htnDecl"></p>
     <a class="hhn-t-link" id="htnLink" href="#"></a>
   </div>
+</div>
 
-  <div class="hhn-legend">
-    <span class="hhn-legend-item"><span class="hhn-legend-dot" style="background:#f5c9a4"></span>Foundation</span>
-    <span class="hhn-legend-item"><span class="hhn-legend-dot" style="background:#8eccd4"></span>Operating</span>
-    <span class="hhn-legend-item"><span class="hhn-legend-dot" style="background:#6b576b"></span>Evidence</span>
-    <span class="hhn-legend-item"><span class="hhn-legend-dot" style="background:#c2925e"></span>Long Game</span>
-  </div>
+<div class="hhn-legend">
+  <span><i style="background:#f5c9a4"></i>Foundation</span>
+  <span><i style="background:#8eccd4"></i>Operating</span>
+  <span><i style="background:#6b576b"></i>Evidence</span>
+  <span><i style="background:#c2925e"></i>Long Game</span>
 </div>
 
 <script>
 (function () {
-  var NS = 'http://www.w3.org/2000/svg';
+  'use strict';
 
-  // Segments: drawn outer-to-inner so inner ones sit on top
-  // cx, cy = center; rx, ry = radii; rot = rotation degrees
-  // tc = text color; fs = font size; label = string or [line1, line2]
-  var segs = [
-    {
-      id: 'HOPE', num: '10', layer: 'Long Game',
-      cx: 192, cy: 153, rx: 92, ry: 56, rot: -9,
-      fill: '#c2925e', tc: '#fff', label: 'HOPE', fs: 14,
-      decl: 'I maintain or find hope, even when it is not easy.',
-      url: '/hope'
-    },
-    {
-      id: 'ENDURE', num: '09', layer: 'Long Game',
-      cx: 372, cy: 285, rx: 75, ry: 83, rot: 18,
-      fill: '#c2925e', tc: '#fff', label: 'ENDURE', fs: 11,
-      decl: 'I consistently implement realistic small steps towards my vision.',
-      url: '/endure'
-    },
-    {
-      id: 'PROTECT', num: '08', layer: 'Evidence',
-      cx: 302, cy: 228, rx: 59, ry: 51, rot: -9,
-      fill: '#6b576b', tc: '#fff', label: 'PROTECT', fs: 9.5,
-      decl: 'I protect myself and others from my feelings and judgements and I protect my secrets and theirs from the rest of the world.',
-      url: '/protect'
-    },
-    {
-      id: 'SHOW', num: '07', layer: 'Evidence',
-      cx: 296, cy: 345, rx: 59, ry: 53, rot: 11,
-      fill: '#6b576b', tc: '#fff', label: 'SHOW', fs: 12,
-      decl: 'I give my inner world a form I can see, hear, touch, and show when it\'s time.',
-      url: '/show'
-    },
-    {
-      id: 'TRUST', num: '03', layer: 'Operating',
-      cx: 155, cy: 218, rx: 45, ry: 41, rot: -13,
-      fill: '#8eccd4', tc: '#03464b', label: 'TRUST', fs: 10,
-      decl: 'I choose to trust as a default because I listen to my inner voice and I know how to see and carry truth.',
-      url: '/trust'
-    },
-    {
-      id: 'THOUGHTS', num: '04', layer: 'Operating',
-      cx: 126, cy: 284, rx: 42, ry: 48, rot: 6,
-      fill: '#8eccd4', tc: '#03464b', label: 'THOUGHTS', fs: 8,
-      decl: 'I allow and direct my thoughts to focus on those things that I want to attract more of.',
-      url: '/thoughts'
-    },
-    {
-      id: 'TALK', num: '05', layer: 'Operating',
-      cx: 130, cy: 362, rx: 48, ry: 41, rot: -11,
-      fill: '#8eccd4', tc: '#03464b', label: 'TALK', fs: 11,
-      decl: 'I use my words to exponentially strengthen and uplift myself and others.',
-      url: '/talk'
-    },
-    {
-      id: 'NON-VERBALS', num: '06', layer: 'Operating',
-      cx: 222, cy: 378, rx: 52, ry: 38, rot: -6,
-      fill: '#8eccd4', tc: '#03464b', label: ['NON-', 'VERBALS'], fs: 8,
-      decl: 'I keep my cool physically when faced with a tough situation. It gives me time to process before I respond.',
-      url: '/non-verbals'
-    },
-    {
-      id: 'TRUTH', num: '02', layer: 'Foundation',
-      cx: 228, cy: 222, rx: 44, ry: 40, rot: 9,
-      fill: '#f5c9a4', tc: '#4a3020', label: 'TRUTH', fs: 10,
-      decl: 'I face objective and subjective truths head on and carry them simultaneously, even when they conflict.',
-      url: '/truth'
-    },
-    {
-      id: 'SELF', num: '01', layer: 'Foundation',
-      cx: 250, cy: 282, rx: 45, ry: 43, rot: 0,
-      fill: '#f5c9a4', tc: '#4a3020', label: 'SELF', fs: 13,
-      decl: 'I am an exquisite and unique being. Everything flows through me and I know, love, and respect the vessel I live in.',
-      url: '/self'
-    }
+  // ---------------------------------------------------------------------------
+  // Habit data
+  // All positions (cx, cy, rx, ry) are in the native 600×600 image space.
+  // The canvas scales these by (displayWidth / 600) at runtime.
+  //
+  // Hit-test order: top visual layers first (evidence → operating → foundation
+  // → long-game) so the topmost visible blob wins on overlap.
+  // ---------------------------------------------------------------------------
+  var habits = [
+    // Evidence (plum) — checked first as they're visually on the right
+    { id:'PROTECT', num:'08', layer:'Evidence',
+      cx:312, cy:252, rx:68, ry:52,
+      fill:'#6b576b',
+      decl:'I protect myself and others from my feelings and judgements and I protect my secrets and theirs from the rest of the world.',
+      url:'/protect' },
+    { id:'SHOW', num:'07', layer:'Evidence',
+      cx:308, cy:372, rx:66, ry:58,
+      fill:'#6b576b',
+      decl:'I give my inner world a form I can see, hear, touch, and show when it\'s time.',
+      url:'/show' },
+
+    // Operating (teal) — the C-shape on the left
+    { id:'TRUST', num:'03', layer:'Operating',
+      cx:128, cy:268, rx:56, ry:48,
+      fill:'#8eccd4',
+      decl:'I choose to trust as a default because I listen to my inner voice and I know how to see and carry truth.',
+      url:'/trust' },
+    { id:'THOUGHTS', num:'04', layer:'Operating',
+      cx:96, cy:355, rx:54, ry:55,
+      fill:'#8eccd4',
+      decl:'I allow and direct my thoughts to focus on those things that I want to attract more of.',
+      url:'/thoughts' },
+    { id:'TALK', num:'05', layer:'Operating',
+      cx:118, cy:447, rx:60, ry:48,
+      fill:'#8eccd4',
+      decl:'I use my words to exponentially strengthen and uplift myself and others.',
+      url:'/talk' },
+    { id:'NON-VERBALS', num:'06', layer:'Operating',
+      cx:224, cy:463, rx:62, ry:44,
+      fill:'#8eccd4',
+      decl:'I keep my cool physically when faced with a tough situation. It gives me time to process before I respond.',
+      url:'/non-verbals' },
+
+    // Foundation (peach) — center blobs
+    { id:'TRUTH', num:'02', layer:'Foundation',
+      cx:238, cy:235, rx:55, ry:48,
+      fill:'#f5c9a4',
+      decl:'I face objective and subjective truths head on and carry them simultaneously, even when they conflict.',
+      url:'/truth' },
+    { id:'SELF', num:'01', layer:'Foundation',
+      cx:248, cy:325, rx:58, ry:55,
+      fill:'#f5c9a4',
+      decl:'I am an exquisite and unique being. Everything flows through me and I know, love, and respect the vessel I live in.',
+      url:'/self' },
+
+    // Long Game (bronze outer shell) — checked last; split by position
+    { id:'HOPE', num:'10', layer:'Long Game',
+      cx:456, cy:138, rx:92, ry:58,
+      fill:'#c2925e',
+      decl:'I maintain or find hope, even when it is not easy.',
+      url:'/hope' },
+    { id:'ENDURE', num:'09', layer:'Long Game',
+      cx:488, cy:312, rx:75, ry:95,
+      fill:'#c2925e',
+      decl:'I consistently implement realistic small steps towards my vision.',
+      url:'/endure' }
   ];
 
-  var svg = document.getElementById('hhnSvg');
-  var tip = document.getElementById('hhnTip');
-  var wrap = document.getElementById('hhnWrap');
-  var isMobile = !window.matchMedia('(hover: hover)').matches;
-  var lastTapped = null;
-  var activeSeg = null;
+  // ---------------------------------------------------------------------------
+  // Canvas setup
+  // ---------------------------------------------------------------------------
+  var canvas  = document.getElementById('hhnCanvas');
+  var ctx     = canvas.getContext('2d');
+  var wrap    = document.getElementById('hhnWrap');
+  var tip     = document.getElementById('hhnTip');
+  var NATIVE  = 600; // PNG native size
 
-  segs.forEach(function (h) {
-    var g = document.createElementNS(NS, 'g');
-    g.setAttribute('class', 'hhn-seg');
-    g.setAttribute('role', 'button');
-    g.setAttribute('aria-label', h.id + ' - ' + h.layer);
+  function scale() { return wrap.offsetWidth / NATIVE; }
 
-    // Ellipse
-    var el = document.createElementNS(NS, 'ellipse');
-    el.setAttribute('cx', h.cx);
-    el.setAttribute('cy', h.cy);
-    el.setAttribute('rx', h.rx);
-    el.setAttribute('ry', h.ry);
-    el.setAttribute('fill', h.fill);
-    el.setAttribute('stroke', '#fdfcfb');
-    el.setAttribute('stroke-width', '3.5');
-    el.setAttribute('filter', 'url(#blob)');
-    if (h.rot !== 0) {
-      el.setAttribute('transform', 'rotate(' + h.rot + ',' + h.cx + ',' + h.cy + ')');
+  function resizeCanvas() {
+    var s = wrap.offsetWidth;
+    canvas.width  = s;
+    canvas.height = s;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', function () {
+    resizeCanvas();
+    renderHover(null); // clear
+  });
+
+  // ---------------------------------------------------------------------------
+  // Hit testing — ellipse check in native coords
+  // ---------------------------------------------------------------------------
+  function getHabit(clientX, clientY) {
+    var rect = wrap.getBoundingClientRect();
+    var s    = scale();
+    var nx   = (clientX - rect.left)  / s; // native coords
+    var ny   = (clientY - rect.top)   / s;
+
+    for (var i = 0; i < habits.length; i++) {
+      var h  = habits[i];
+      var dx = (nx - h.cx) / h.rx;
+      var dy = (ny - h.cy) / h.ry;
+      if (dx * dx + dy * dy <= 1) return h;
     }
-    g.appendChild(el);
+    return null;
+  }
 
-    // Label
-    var txt = document.createElementNS(NS, 'text');
-    var lines = Array.isArray(h.label) ? h.label : [h.label];
-    var lineH = h.fs * 1.28;
-    var startY = h.cy - (lines.length - 1) * lineH / 2;
-    txt.setAttribute('x', h.cx);
-    txt.setAttribute('y', startY);
-    txt.setAttribute('text-anchor', 'middle');
-    txt.setAttribute('dominant-baseline', 'middle');
-    txt.setAttribute('fill', h.tc);
-    txt.setAttribute('font-size', h.fs);
-    txt.setAttribute('font-family', 'Josefin Sans, sans-serif');
-    txt.setAttribute('font-weight', '500');
-    txt.setAttribute('letter-spacing', '0.09em');
+  // ---------------------------------------------------------------------------
+  // Hover glow — draw a white radial-gradient ellipse over the hovered blob
+  // ---------------------------------------------------------------------------
+  function renderHover(h) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!h) return;
 
-    lines.forEach(function (line, i) {
-      var ts = document.createElementNS(NS, 'tspan');
-      ts.setAttribute('x', h.cx);
-      ts.setAttribute('dy', i === 0 ? '0' : lineH);
-      ts.textContent = line;
-      txt.appendChild(ts);
-    });
-    g.appendChild(txt);
+    var s  = scale();
+    var cx = h.cx * s;
+    var cy = h.cy * s;
+    var rx = h.rx * s;
+    var ry = h.ry * s;
 
-    // Desktop hover
-    g.addEventListener('mouseenter', function (e) {
-      if (isMobile) return;
-      showTip(h);
-      positionTip(e);
-    });
-    g.addEventListener('mousemove', function (e) {
-      if (isMobile) return;
-      positionTip(e);
-    });
-    g.addEventListener('mouseleave', function () {
-      if (isMobile) return;
-      hideTip();
-    });
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(rx, ry);
+    var grad = ctx.createRadialGradient(0, 0, 0.1, 0, 0, 1);
+    grad.addColorStop(0,   'rgba(255,255,255,0.38)');
+    grad.addColorStop(0.65,'rgba(255,255,255,0.18)');
+    grad.addColorStop(1,   'rgba(255,255,255,0)');
+    ctx.globalCompositeOperation = 'screen';
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(0, 0, 1, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+    ctx.globalCompositeOperation = 'source-over';
+  }
 
-    // Click: desktop navigates; mobile: first tap = tooltip, second = navigate
-    g.addEventListener('click', function (e) {
-      if (!isMobile) {
-        window.location.href = h.url;
-        return;
-      }
-      if (lastTapped === h.id) {
-        window.location.href = h.url;
-      } else {
-        e.stopPropagation();
-        if (activeSeg) activeSeg.classList.remove('tap-active');
-        g.classList.add('tap-active');
-        activeSeg = g;
-        lastTapped = h.id;
-        showTip(h);
-        positionTipTouch(h);
-      }
-    });
-
-    svg.appendChild(g);
-  });
-
-  // Close on outside tap
-  document.addEventListener('click', function () {
-    if (!isMobile) return;
-    hideTip();
-    if (activeSeg) { activeSeg.classList.remove('tap-active'); activeSeg = null; }
-    lastTapped = null;
-  });
-
+  // ---------------------------------------------------------------------------
+  // Tooltip
+  // ---------------------------------------------------------------------------
   function showTip(h) {
-    document.getElementById('htnNum').textContent = h.num + '  |  ' + h.layer;
+    document.getElementById('htnNum').textContent  = h.num + '  |  ' + h.layer;
     document.getElementById('htnName').textContent = h.id;
-    document.getElementById('htnDecl').textContent = '“' + h.decl + '”';
+    document.getElementById('htnDecl').textContent = '"' + h.decl + '"';
     var lnk = document.getElementById('htnLink');
     lnk.textContent = 'Explore ' + h.id + ' →';
     lnk.href = h.url;
     tip.classList.add('show');
   }
+  function hideTip() { tip.classList.remove('show'); }
 
-  function hideTip() {
-    tip.classList.remove('show');
-  }
-
-  function positionTip(e) {
+  function placeTip(clientX, clientY) {
     var rect = wrap.getBoundingClientRect();
-    var x = e.clientX - rect.left;
-    var y = e.clientY - rect.top;
-    place(x, y);
-  }
-
-  function positionTipTouch(h) {
-    // Position tooltip relative to segment center in SVG coords
-    var rect = wrap.getBoundingClientRect();
-    var svgW = svg.viewBox.baseVal.width; // 520
-    var svgH = svg.viewBox.baseVal.height; // 500
-    var scaleX = rect.width / svgW;
-    var scaleY = rect.height / svgH;
-    var x = h.cx * scaleX;
-    var y = h.cy * scaleY;
-    place(x, y);
-  }
-
-  function place(x, y) {
-    var tw = 234, th = 170;
-    var rect = wrap.getBoundingClientRect();
+    var x    = clientX - rect.left;
+    var y    = clientY - rect.top;
+    var tw   = 234, th = 172;
     var left = x + 14;
-    var top = y - th - 8;
+    var top  = y - th - 10;
     if (left + tw > rect.width - 4) left = x - tw - 14;
     if (left < 4) left = 4;
-    if (top < 4) top = y + 14;
-    if (top + th > rect.height + 20) top = Math.max(4, y - th - 8);
+    if (top < 4)  top  = y + 14;
     tip.style.left = left + 'px';
-    tip.style.top = top + 'px';
+    tip.style.top  = top  + 'px';
   }
+
+  function placeTipNear(h) {
+    var s  = scale();
+    var cx = wrap.getBoundingClientRect().left + h.cx * s;
+    var cy = wrap.getBoundingClientRect().top  + h.cy * s;
+    placeTip(cx, cy);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Desktop: hover + click
+  // ---------------------------------------------------------------------------
+  var isMobile  = !window.matchMedia('(hover: hover)').matches;
+  var lastTapped = null;
+  var curHabit   = null;
+
+  canvas.addEventListener('mousemove', function (e) {
+    if (isMobile) return;
+    var h = getHabit(e.clientX, e.clientY);
+    canvas.style.cursor = h ? 'pointer' : 'default';
+    if (h !== curHabit) {
+      curHabit = h;
+      renderHover(h);
+      if (h) { showTip(h); placeTip(e.clientX, e.clientY); }
+      else   { hideTip(); }
+    } else if (h) {
+      placeTip(e.clientX, e.clientY);
+    }
+  });
+
+  canvas.addEventListener('mouseleave', function () {
+    if (isMobile) return;
+    curHabit = null;
+    renderHover(null);
+    hideTip();
+  });
+
+  canvas.addEventListener('click', function (e) {
+    var h = getHabit(e.clientX, e.clientY);
+    if (!h) return;
+    if (!isMobile) {
+      window.location.href = h.url;
+      return;
+    }
+    // Mobile: first tap = tooltip, second tap = navigate
+    if (lastTapped === h.id) {
+      window.location.href = h.url;
+    } else {
+      lastTapped = h.id;
+      curHabit   = h;
+      renderHover(h);
+      showTip(h);
+      placeTipNear(h);
+      e.stopPropagation();
+    }
+  });
+
+  // Close tooltip on outside tap (mobile)
+  document.addEventListener('click', function () {
+    if (!isMobile) return;
+    hideTip();
+    if (curHabit) { renderHover(null); curHabit = null; }
+    lastTapped = null;
+  });
 
 })();
 </script>
