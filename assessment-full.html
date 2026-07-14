@@ -219,16 +219,17 @@
     <div class="ha-detail-layers" id="haDetailLayers"></div>
 
     <div class="ha-resonate-block">
-      <p class="ha-resonate-prompt">Does this resonate?</p>
-      <p class="ha-resonate-sub">Leave your email and we'll send you your results, then check in with you in 30, 60, and 90 days to see how things have shifted.</p>
+      <p class="ha-resonate-prompt">This is yours. Don't lose it.</p>
+      <p class="ha-resonate-sub">Leave your email and we'll save your results, send you the full picture across all four layers, and check back in at 30, 60, and 90 days to see how things have shifted. Early adopters who complete the assessment will receive a free core subscription to Praksis when it launches.</p>
       <div class="ha-email-row">
         <input type="email" class="ha-email-input" id="haEmailInput" placeholder="your@email.com">
-        <button class="ha-email-btn" id="haEmailBtn">Yes, Save My Results</button>
+        <button class="ha-email-btn" id="haEmailBtn">Yes, save my results &#x2192;</button>
       </div>
+      <p style="font-size:12px;color:#999;margin-top:10px;letter-spacing:.02em">No spam. No pressure. Just your results and a follow-up when it matters.</p>
       <p class="ha-email-confirm" id="haEmailConfirm">Saved. We'll be in touch.</p>
     </div>
 
-    <div class="ha-actions">
+    <div class="ha-actions" id="haActions" style="display:none">
       <button class="ha-print-btn" onclick="window.print()">Print / Save as PDF</button>
       <a href="https://theharthabits.com/assessment" class="ha-share-link">Share this assessment</a>
     </div>
@@ -412,7 +413,10 @@
     var payload = { sessionId: sessionId, email: email, completionType: 'full', sourcePage: '/assessment', scores: {} };
     habits.forEach(function(h){ payload.scores[h.name] = scores[h.name]; });
     fetch(WORKER, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) })
-      .then(function(){ document.getElementById('haEmailConfirm').style.display = 'block'; })
+      .then(function(){
+        document.getElementById('haEmailConfirm').style.display = 'block';
+        document.getElementById('haActions').style.display = 'flex';
+      })
       .catch(function(){});
   });
 
